@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">電卓 by 夜子まま塾</string>
+    <string name="hint">過去の演算処理内容</string>
+    
+    <string name="err_mes_001">演算子を続けて入力することは出来ません</string>
+</resources>
