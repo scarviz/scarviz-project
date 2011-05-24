@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VoiceRecognizer</string>
+    <string name="mes_001">音声認識を行います。下記ボタン押下後、何か話してください。</string>
+    
+    <!-- ボタン用 -->
+    <string name="btn_001">音声認識開始</string>
+    
+    <!-- エラーメッセージ -->
+    <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
+
+</resources>
