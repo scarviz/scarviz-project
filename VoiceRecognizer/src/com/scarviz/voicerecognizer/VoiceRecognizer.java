@@ -10,6 +10,12 @@ import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.Toast;
 
+/**
+ * 音声認識Activityクラス
+ * 
+ * @author scarviz
+ *
+ */
 public class VoiceRecognizer extends Activity {
 	// 返ってきた時の認証用コード(数字は適当なもので良い)
     private static final int REQUEST_CODE_VOICE_RECO = 123;
