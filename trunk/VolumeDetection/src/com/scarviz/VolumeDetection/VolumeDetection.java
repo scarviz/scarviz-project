@@ -51,15 +51,16 @@ public class VolumeDetection extends Activity {
 				new VolumeDetectionRunnable.OnReachedVolumeListener() {
 					// 音量検出時
 					@Override
-					public void OnReachedVolum(final short volume) {
+					public void OnReachedVolume(final short volume) {
 						// 別スレッドからUIスレッドに要求する
 						mHandler.post(new Runnable(){
 							public void run(){
-								// デシベルに変換する
-								float val 
-								= (float)(20.0 * Math.log10(volume / 32767.0));
-								// 画面に出力する。改行して追加していく
-								txtVol.append(val + UNIT_DB + NEWLINE);
+								// TODO : デシベルに変換する
+								//float val 
+								//= (float)(20.0 * Math.log10(volume / 32767.0));
+								//// 画面に出力する。改行して追加していく
+								//txtVol.append(val + UNIT_DB + NEWLINE);
+								txtVol.append(String.valueOf(volume) + NEWLINE);
 							}
 						});
 					}
@@ -87,6 +88,8 @@ public class VolumeDetection extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		// 音量検出停止
+		mVolDetectRun.stop();
 		// GCのメモリ解放の優先度を上げるため
 		mVolDetectRun = null;
 		txtVol = null;
