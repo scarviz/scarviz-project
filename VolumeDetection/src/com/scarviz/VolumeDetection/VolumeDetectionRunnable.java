@@ -17,6 +17,27 @@ public class VolumeDetectionRunnable implements Runnable {
 	private static final int SAMPLE_RATE = 8000;
 	// リスナー
 	private OnReachedVolumeListener mListener;
+	// ボーダー
+	private short mBorderVolume = 10000;
+	
+	/**
+	 * ボーダー値を設定する。
+	 * 
+	 * @param volume
+	 */
+	public void SetmBorderVolume(short volume)
+	{
+		mBorderVolume = volume;
+	}
+	/**
+	 * ボーダー値を取得する。
+	 * 
+	 * @return
+	 */
+	public short GetmBorderVolume()
+	{
+		return mBorderVolume;
+	}
 	
 	/**
 	 * 録音停止
@@ -43,7 +64,7 @@ public class VolumeDetectionRunnable implements Runnable {
 	 *
 	 */
 	public interface OnReachedVolumeListener {
-		void OnReachedVolum(short volume);
+		void OnReachedVolume(short volume);
 	}
 	
 	/**
@@ -81,13 +102,13 @@ public class VolumeDetectionRunnable implements Runnable {
 			for(short item : buffer){
 				// バッファ中の最大音量を取得する
 				maxVol = (short)Math.max(maxVol, item);
-			}
-			
-			if(mListener != null){
-				// リスナー実行
-				mListener.OnReachedVolum(maxVol);
-				// ループから抜ける
-				break;
+
+				if((maxVol > 10000) && (mListener != null)){
+					// リスナー実行
+					mListener.OnReachedVolume(maxVol);
+					// ループから抜ける
+					break;
+				}
 			}
 		}
 		
