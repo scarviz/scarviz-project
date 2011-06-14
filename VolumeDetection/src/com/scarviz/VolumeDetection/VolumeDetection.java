@@ -88,8 +88,6 @@ public class VolumeDetection extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// 音量検出停止
-		mVolDetectRun.stop();
 		// GCのメモリ解放の優先度を上げるため
 		mVolDetectRun = null;
 		txtVol = null;
