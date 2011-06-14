@@ -4,14 +4,23 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/mes01"
-    />
-<TextView
-	android:id="@+id/txtVol" 
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    />
+<ScrollView 
+	android:layout_height="wrap_content" 
+	android:layout_width="fill_parent">
+    <LinearLayout 
+		android:layout_width="wrap_content" 
+		android:layout_height="fill_parent"
+		android:orientation="vertical">
+		<TextView
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="@string/mes01"
+		    />
+		<TextView
+			android:id="@+id/txtVol" 
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    />	
+	</LinearLayout>
+</ScrollView>
 </LinearLayout>
