@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">わん！クリック救助検 for Android</string>
+    <string name="title">わん！クリック救助検 for Android</string>
+    <string name="status_001">位置情報を取得します。</string>
+    <string name="status_002">取得中です。少し移動すると取得しやすいです。</string>
+    <string name="btn_001">取得</string>
+    <string name="btn_002">前回情報から取得</string>
+    <string name="mes_002">
+    	○このアプリの使い方○\n
+    	取得ボタンをワンクリックするだけで、GPSから現在地を調べ、
+    	周りにある炊き出し、食料、日用品などの被災者支援情報を掲載しているサイトを一覧にして表示します。\n
+    	GPSを有効にして、取得ボタンを押してください。
+    </string>
+    <string name="mes_003">位置情報取得に失敗しました</string>
+    <string name="mes_004">
+    	\n\n前回の位置情報からサイト一覧を表示する場合は、
+    	下の前回情報から取得ボタンを押してください。\n
+    	この場合はGPSを使用せずに表示できます。(GPSは無効のままで構いません)
+    </string>
+    
+    <!-- ダイアログ用 -->
+    <string name="dlg_title">お願い</string>
+    <string name="dlg_mes_001">GPSを有効にしてください</string>
+    <string name="dlg_btn_ok">OK</string>
+    
+    <!-- メニュー用 -->
+    <string name="menu_aboutapp">このアプリについて</string>
+    <string name="mes_aboutapp">
+    	このアプリは2011年3月11日に発生した東北地方太平洋沖地震の被災者のために、
+    	2011年3月19日～3月21日に行われた「Hack For Japan」という被災者支援活動のもとで作成されたものです。\n
+    	被災者の方がいち早く支援を受けられますように、いち早く安全を確保できますようにという願いを込めて作成しました。\n
+    	少しでもお役に立てたなら幸いです。\n
+    	多くの犠牲者にお悔やみを申し上げるとともに、被災者の方々にお見舞い申し上げます。\n
+    	\n
+    	※支援サイトオーナー様へのお願い※\n
+    	現在地から炊き出し、食料、日用品などの、被災者支援情報を掲載している
+    	サイト一覧を表示する仕組みのため、サイトオーナー様のサイト登録をお願いしています。\n
+    	もしよろしければ、お手数かけ申し訳ありませんが、「わん！クリック救助検」への
+    	登録をお願いいたします。\n
+    	http://one.jaws-ug.jp/
+    </string>
+    
+</resources>
