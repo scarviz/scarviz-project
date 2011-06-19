@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">※※ ACESample ※※</string>
+    <string name="app_name">ACESample</string>
+    
+    <string name="subTitle244">●2.4.4</string>
+    <string name="mes01">Toastテスト(短時間表示)</string>
+    <string name="mes02">Toastテスト(長時間表示)</string>
+    <string name="btn01">Toast表示(Short)</string>
+    <string name="btn02">Toast表示(Long)</string>
+    
+    <string name="subTitle253">●2.5.3</string>
+    <string name="mes03">Styleテスト</string>
+    
+    <string name="subTitle262">●2.6.2</string>
+    <string name="btn03">ListView表示</string>
+    
+    <string name="subTitle266">●2.6.6</string>
+    <string name="mes04">※TextView(先に書いているが右に配置するように設定している)※</string>
+    <string name="mes05">alignRightTextView(alignRightの基準)</string>
+</resources>
