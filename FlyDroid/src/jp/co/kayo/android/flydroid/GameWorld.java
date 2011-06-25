@@ -25,6 +25,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.view.SurfaceView;
 
 /***
@@ -129,6 +131,8 @@ public class GameWorld {
     class Bee extends GameObject {
         //ハチとドロイド君がぶつかった時間
         long crashtime;
+        
+        private float mScale;
 
         /***
          * ハチのコンストラクタ
@@ -140,6 +144,13 @@ public class GameWorld {
             super(w, h);
             dx = 0;
             dy = -0.3f;
+            mScale=1;
+        }
+        public float getScale(){
+        	return mScale;
+        }
+        public void setScale(float scale){
+        	this.mScale=scale;
         }
 
         /***
@@ -344,8 +355,19 @@ public class GameWorld {
                 //全てのハチを描画
                 synchronized (bees) {
                     for (Bee obj : bees) {
+                    	float scale=obj.getScale();
+                    	
                         int x = obj.x - obj.hwidth;
                         int y = obj.y - obj.hheight;
+                        
+                        Rect src=new Rect(x,y,x+beeImg.getWidth(),y+beeImg.getHeight());
+                        RectF dist=new RectF(x,y,x+beeImg.getWidth()*scale,y+beeImg.getHeight()*scale);
+                        
+                        beeImg.getWidth();
+                        beeImg.getHeight();
+                        
+                        canvas.drawBitmap(beeImg, src, dist, null);
+                        
                         canvas.drawBitmap(beeImg, x, y, null);
                     }
                 }
