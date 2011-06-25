@@ -22,6 +22,7 @@ package jp.co.kayo.android.flydroid;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -47,6 +48,8 @@ public class MainActivity extends Activity implements OnTouchListener {
     private TextView txtTime;
     private TextView txtScore;
 
+    private VolumeDetection volumeDetection;
+    
     /***
      * 画面の作成処理
      * Memo： Overridはこのメソッドはオーバーライドされてますという意味です
@@ -65,6 +68,8 @@ public class MainActivity extends Activity implements OnTouchListener {
         //surfaceviewのインスタンスを取得して、GameMainを作成
         SurfaceView surfaceview = (SurfaceView) findViewById(R.id.SurfaceView1);
         gamemain = new GameMain(surfaceview);
+        
+        volumeDetection = new VolumeDetection();
         //画面タッチしたときのイベントをうけとれるように設定
         //Q: thisて何でしょう？
         surfaceview.setOnTouchListener(this);
@@ -99,6 +104,7 @@ public class MainActivity extends Activity implements OnTouchListener {
         //そのため、それぞれで処理を変えるべきですが、ここでは変えていないので
         //一時停止からの復帰からでもリセットされてしまいます。気になる方は工夫してみましょう
         gamemain.start();
+        
     }
 
     /***
@@ -172,6 +178,7 @@ public class MainActivity extends Activity implements OnTouchListener {
                 isStop = false;
                 //契約は成立だ。君の祈りは、エントロピーを凌駕した。さあ、解き放ってごらん。その新しい力を！
                 (new Thread(this)).start();
+                volumeDetection.Start();
             }
         }
 
@@ -210,6 +217,12 @@ public class MainActivity extends Activity implements OnTouchListener {
                     
                     //次の経過時間のために値を設定する
                     lasttime = now;
+ 
+                    short volume = volumeDetection.GetVolume();
+                    short volumediv = (short) (volume / 5000); 
+                    Log.d("volume/ 5000","volumediv:"+volumediv);
+                    //if(volume > volumediv )
+                    
                     //処理に応じて、世界を再描画します
                     world.drawView(surfaceview);
                 }
