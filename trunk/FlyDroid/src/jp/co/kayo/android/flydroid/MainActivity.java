@@ -219,12 +219,22 @@ public class MainActivity extends Activity implements OnTouchListener {
                     lasttime = now;
  
                     short volume = volumeDetection.GetVolume();
-                    short volumediv = (short) (volume / 5000); 
-                    Log.d("volume/ 5000","volumediv:"+volumediv);
-                    //if(volume > volumediv )
+                    //if(volume != 0 ){
+                    	Log.d("volume","volume:"+volume);
+                    //}
+                    short volumediv = (short)(volume / 2000);
+                    if(volumediv > 10 ){
+                    	volumediv = 10;
+                    }
+                    if(volumediv < 1 ){
+                    	volumediv = 1;
+                    }
+                    world.setScale(volumediv);
+                    
+                   	world.drawView(surfaceview);
                     
                     //処理に応じて、世界を再描画します
-                    world.drawView(surfaceview);
+                    
                 }
                 else{
                     world.init(surfaceview);

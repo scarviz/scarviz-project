@@ -1,5 +1,7 @@
 package jp.co.kayo.android.flydroid;
 
+import android.util.Log;
+
 /**
  * 音量検出クラス
  * 
@@ -36,17 +38,19 @@ public class VolumeDetection {
 						// 音量検出時
 						@Override
 						public void OnReachedVolume(final short volume) {
-							new Runnable(){
-								public void run(){
+//							new Runnable(){
+//								public void run(){
 									mVolume = volume;
-								}
-							};
+//								}
+							//};
 						}
 					});
 			// 別スレッド開始
 			new Thread(mVolDetectRun).start();	
 		}
-		catch(Exception ex){} // No Throw
+		catch(Exception ex){
+			Log.d("listenrEX","ex:" + ex.getMessage());
+		} // No Throw
 	}
 
     /**
