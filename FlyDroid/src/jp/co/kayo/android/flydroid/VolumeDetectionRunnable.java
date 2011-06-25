@@ -3,6 +3,7 @@ package jp.co.kayo.android.flydroid;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 /**
  * 音量検出Runnableクラス
@@ -18,7 +19,7 @@ public class VolumeDetectionRunnable implements Runnable {
 	// リスナー
 	private OnReachedVolumeListener mListener;
 	// ボーダー
-	private short mBorderVolume = 10000;
+	private short mBorderVolume = 30;
 	
 	/**
 	 * ボーダー値を設定する。
@@ -102,7 +103,7 @@ public class VolumeDetectionRunnable implements Runnable {
 			for(short item : buffer){
 				// バッファ中の最大音量を取得する
 				maxVol = (short)Math.max(maxVol, item);
-
+				Log.d("TEST","maxVol:"+maxVol);
 				if((maxVol > mBorderVolume) && (mListener != null)){
 					// リスナー実行
 					mListener.OnReachedVolume(maxVol);

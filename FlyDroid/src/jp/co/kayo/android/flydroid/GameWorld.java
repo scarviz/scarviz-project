@@ -71,7 +71,14 @@ public class GameWorld {
     private SoundManager soundmgr;
     //得点
     private long score;
-
+    
+    private float mScale;
+    public void setScale(float scale){
+    	mScale = scale;
+    	for (Bee obj : bees) {
+    		obj.setScale(scale);
+    	}
+    }
     /***
      * 世界に存在するオブジェクトを表すクラス
      * Memo：abstractは抽象クラスを表す属性です
