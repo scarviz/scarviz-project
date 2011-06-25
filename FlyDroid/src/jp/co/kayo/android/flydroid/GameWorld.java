@@ -360,7 +360,7 @@ public class GameWorld {
                         int x = obj.x - obj.hwidth;
                         int y = obj.y - obj.hheight;
                         
-                        Rect src=new Rect(x,y,x+beeImg.getWidth(),y+beeImg.getHeight());
+                        Rect src=new Rect(0,0,beeImg.getWidth(),beeImg.getHeight());
                         RectF dist=new RectF(x,y,x+beeImg.getWidth()*scale,y+beeImg.getHeight()*scale);
                         
                         beeImg.getWidth();
@@ -368,7 +368,7 @@ public class GameWorld {
                         
                         canvas.drawBitmap(beeImg, src, dist, null);
                         
-                        canvas.drawBitmap(beeImg, x, y, null);
+//                        canvas.drawBitmap(beeImg, x, y, null);
                     }
                 }
             }
