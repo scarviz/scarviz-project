@@ -12,30 +12,58 @@ public class VolumeDetection {
 	// 音量値
 	private short mVolume;
 
+	/**
+	 * コンストラクタ
+	 * 
+	 */
+	public VolumeDetection()
+	{
+		// 初期値
+		mVolume = 0;
+	}
+	
+	/**
+	 * スレッドを開始する。
+	 * 
+	 */
+	public void Start()
+	{
+		try{
+			mVolDetectRun = new VolumeDetectionRunnable();
+			// リスナー登録
+			mVolDetectRun.setOnVolumeReachedListener(
+					new VolumeDetectionRunnable.OnReachedVolumeListener() {
+						// 音量検出時
+						@Override
+						public void OnReachedVolume(final short volume) {
+							new Runnable(){
+								public void run(){
+									mVolume = volume;
+								}
+							};
+						}
+					});
+			// 別スレッド開始
+			new Thread(mVolDetectRun).start();	
+		}
+		catch(Exception ex){} // No Throw
+	}
 
     /**
-     * 入力待ち状態時処理。
+     * 音量値を取得する。
      * 
      */
 	public short GetVolume() {
-		mVolDetectRun = new VolumeDetectionRunnable();
-		// リスナー登録
-		mVolDetectRun.setOnVolumeReachedListener(
-				new VolumeDetectionRunnable.OnReachedVolumeListener() {
-					// 音量検出時
-					@Override
-					public void OnReachedVolume(final short volume) {
-						new Runnable(){
-							public void run(){
-								mVolume = volume;
-							}
-						};
-					}
-				});
-		// 別スレッド開始
-		new Thread(mVolDetectRun).start();
-		
 		return mVolume;
 	}
     
+	/**
+	 * スレッドを停止する。
+	 * 
+	 */
+	public void Stop()
+	{
+		// スレッド停止
+		new Thread(mVolDetectRun).stop();
+	}
 }
