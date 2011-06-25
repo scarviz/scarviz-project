@@ -229,17 +229,21 @@ public class GameWorld {
             int ax2 = x + hwidth;
             int ay2 = y + hheight;
 
+            
             //すべてのハチにたいして当たり判定を行います
             //こういう当たり判定処理は数が少ない場合は全部総当りで行ってもかまいませんが。
             //大規模になってくるととてもじゃないと総当りは無理です。そのため色々
             //工夫する仕組みもあります。ここでは手抜きしてます
             for (Bee obj : bees) {
+            	
+            	int scaledw  = (int)(obj.hwidth * obj.getScale());
+            	int scaledh  = (int)(obj.hwidth * obj.getScale());
                 //ハチの当たり判定用の箱を計算
                 //中心座標から半径分の幅、高さを加えたB1,B2です
-                int bx1 = obj.x - obj.hwidth;
-                int by1 = obj.y - obj.hheight;
-                int bx2 = obj.x + obj.hwidth;
-                int by2 = obj.y + obj.hheight;
+				int bx1 = obj.x - scaledw;
+				int by1 = obj.y - scaledh;
+				int bx2 = obj.x + scaledw;
+				int by2 = obj.y + scaledh;
                 //箱同士で当たり判定を行います
                 if (Utils.isCrash(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2)) {
                     //当たっているなら衝突設定をハチに設定し自身は消滅する
