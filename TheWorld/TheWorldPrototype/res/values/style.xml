@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="defaultTheme">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">40px</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="boxBarTheme">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">30px</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="battleMesTheme">
+	    <item name="android:textColor">@color/red</item>
+	    <item name="android:textSize">80px</item>
+	    <item name="android:textStyle">bold</item>
+    </style>
+</resources>
