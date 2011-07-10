@@ -103,7 +103,6 @@ public class VolumeDetectionRunnable implements Runnable {
 			for(short item : buffer){
 				// バッファ中の最大音量を取得する
 				maxVol = (short)Math.max(maxVol, item);
-				Log.d("TEST","maxVol:"+maxVol);
 				if((maxVol > mBorderVolume) && (mListener != null)){
 					// リスナー実行
 					mListener.OnReachedVolume(maxVol);
