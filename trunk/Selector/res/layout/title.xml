@@ -3,37 +3,59 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_gravity="center"
+    android:layout_gravity="center_vertical"
     >
-	<ImageView
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:src="@drawable/icon"
-	    />
-	<ImageView
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:src="@drawable/icon"
-	    android:onClick="onClickContinueButton"
-	    />
     <LinearLayout
-	    android:orientation="horizontal"
-	    android:layout_width="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:layout_gravity="center"
+	    android:layout_weight="1"
+	    android:gravity="center"
 	    >
 		<ImageView
-		    android:layout_width="wrap_content"
+		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:src="@drawable/icon"
-		    android:onClick="onClickStartButton"
 		    />
+    </LinearLayout>
+    <LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="1"
+	    android:gravity="center"
+	    >
+    </LinearLayout>
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:gravity="center"
+	    android:layout_weight="1"
+	    >
 		<ImageView
-		    android:layout_width="wrap_content"
+		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:src="@drawable/icon"
-		    android:onClick="onClickOptionButton"
+		    android:onClick="onClickContinueButton"
 		    />
-
+	    <LinearLayout
+		    android:orientation="horizontal"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    >
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:src="@drawable/icon"
+			    android:onClick="onClickStartButton"
+			    />
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:src="@drawable/icon"
+			    android:onClick="onClickOptionButton"
+			    />
+	    </LinearLayout>
     </LinearLayout>
 </LinearLayout>
