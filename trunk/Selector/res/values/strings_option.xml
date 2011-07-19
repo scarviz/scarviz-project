@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="option_button_ok">OK</string>
+    <string name="option_button_cancel">キャンセル</string>
+
+    <string name="option_category_title_volume">音量設定</string>
+
+    <string name="option_bgm_title">BGM</string>
+    <string name="option_bgm_summary">BGMの音量を変更します</string>
+
+    <string name="option_se_title">効果音</string>
+    <string name="option_se_summary">効果音の音量を変更します</string>
+
+    <string name="option_reset_title">リセット</string>
+    <string name="option_reset_summary">設定を初期化します</string>
+    <string name="option_reset_message">設定をすべて初期化してよろしいですか？</string>
+</resources>
