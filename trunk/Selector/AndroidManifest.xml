@@ -17,6 +17,9 @@
         <activity android:name=".ScenarioList"
         		  android:label="@string/app_name">
         </activity>
+        <activity android:name=".InputInfo"
+        		  android:label="@string/app_name">
+        </activity>
         <activity android:name=".Option"/>
     </application>
 </manifest>
