@@ -81,6 +81,12 @@ public class Main extends Activity {
         
         // 計算用配列
         mCalcArray = new ArrayList<String>();
+        
+        // 退避情報が存在する場合
+        if(savedInstanceState != null){
+	        // 退避情報を再格納する
+	        GetInstanceState(savedInstanceState);
+        }
     }
     
     /**
@@ -141,8 +147,8 @@ public class Main extends Activity {
 	    		break;
     	}
     }
-    
-    /**
+
+	/**
      * 計算内容を追加する。
      * 
      * @param calcTxt
@@ -417,6 +423,40 @@ public class Main extends Activity {
     	
     	return result;
     }
+    
+    /**
+     * 退避情報を再格納する。
+     * 
+     */
+    private void GetInstanceState(Bundle inState){
+    	// 退避情報を取得する
+    	String txtCalc = inState.getString("txtCalc");			// 計算内容
+    	String txtPastCalc = inState.getString("txtPastCalc");	// 過去計算内容
+    	
+    	// 取得した値を再格納する
+    	mTxtCalc.setText(txtCalc);			// 計算内容
+    	mTxtPastCalc.setText(txtPastCalc);	// 過去計算内容
+    	isEnabledResult = inState.getBoolean("isEnabledResult", false);	// 計算結果の有効フラグ
+    	mCalcArray = inState.getStringArrayList("calcArray");			// 計算用配列
+    }
+    
+    /**
+     * 保持している情報を退避させる。
+     * 
+     */
+    @Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		// 退避する値の取得
+    	String txtCalc = mTxtCalc.getText().toString();			// 計算内容
+    	String txtPastCalc = mTxtPastCalc.getText().toString();	// 過去計算内容
+    	
+    	// 情報を退避させる
+		outState.putString("txtCalc", txtCalc);					// 計算内容
+		outState.putString("txtPastCalc", txtPastCalc);			// 過去計算内容
+		outState.putBoolean("isEnabledResult", isEnabledResult);// 計算結果の有効フラグ
+		outState.putStringArrayList("calcArray", mCalcArray);	// 計算用配列
+	}
     
     /**
      * Activity終了時イベント。
