@@ -8,7 +8,7 @@
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+		android:layout_height="wrap_content">
 	    <TextView
 	    	android:text="名前"
 	    	style="@style/defaultTheme"
@@ -22,4 +22,18 @@
 				android:layout_height="wrap_content">
 		</EditText>
 	</LinearLayout>
+    
+    <LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal">
+		<Button
+	    	android:text="@string/decision"
+	    	android:id="@+id/btnDecision"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+			android:onClick="onClickButton">
+	    </Button>
+    </LinearLayout>
 </LinearLayout>

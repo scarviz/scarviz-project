@@ -22,7 +22,8 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int TextView01=0x7f070001;
+        public static final int TextView01=0x7f070002;
+        public static final int btnDecision=0x7f070001;
         public static final int txtName=0x7f070000;
     }
     public static final class layout {
@@ -32,9 +33,15 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
+        /**  ボタン 
+         */
+        public static final int decision=0x7f050001;
+        /**  エラーメッセージ 
+         */
+        public static final int err_mes_01=0x7f050003;
         /**  ヒント 
          */
-        public static final int hint_input_name=0x7f050001;
+        public static final int hint_input_name=0x7f050002;
     }
     public static final class style {
         public static final int defaultTheme=0x7f060000;

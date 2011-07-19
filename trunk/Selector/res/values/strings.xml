@@ -2,6 +2,12 @@
 <resources>
     <string name="app_name">Selector</string>
     
+    <!-- ボタン -->
+    <string name="decision">決定</string>
+    
     <!-- ヒント -->
     <string name="hint_input_name">名前を入力してください</string>
+    
+    <!-- エラーメッセージ -->
+    <string name="err_mes_01">名前が未入力です</string>
 </resources>

@@ -8,6 +8,12 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * シナリオリストクラス
+ * 
+ * @author scarviz
+ *
+ */
 public class ScenarioList extends ListActivity {
 
 	@Override
@@ -33,7 +39,7 @@ public class ScenarioList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		// 選択した行を呼び出し元に返して終了する
+		// TODO : 選択した行を呼び出し元に返して終了する
 		Intent intent = new Intent();
 		intent.putExtra("TITLE_NO", position);  
 		setResult(RESULT_OK, intent);  
