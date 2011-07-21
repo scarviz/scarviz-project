@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VoiceJournal</string>
+    
+    <!-- エラーメッセージ -->
+    <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
+</resources>
