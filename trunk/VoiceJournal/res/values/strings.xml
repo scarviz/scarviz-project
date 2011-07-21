@@ -2,6 +2,12 @@
 <resources>
     <string name="app_name">VoiceJournal</string>
     
+    <!-- ダイアログ用 -->
+    <string name="dlg_title">お願い</string>
+    <string name="dlg_mes_001">GPSを有効にしてください</string>
+    <string name="dlg_btn_ok">OK</string>
+    
     <!-- エラーメッセージ -->
     <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
+    <string name="err_mes_002">位置情報取得に失敗しました</string>
 </resources>

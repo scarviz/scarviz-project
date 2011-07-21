@@ -22,18 +22,28 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
+        public static final int btnGps=0x7f070001;
         public static final int btnRec=0x7f070000;
+        public static final int txtJournal=0x7f070002;
     }
     public static final class layout {
         public static final int main=0x7f030000;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
+        public static final int dlg_btn_ok=0x7f050003;
+        public static final int dlg_mes_001=0x7f050002;
+        /**  ダイアログ用 
+         */
+        public static final int dlg_title=0x7f050001;
         /**  エラーメッセージ 
          */
-        public static final int err_mes_001=0x7f050001;
+        public static final int err_mes_001=0x7f050004;
+        public static final int err_mes_002=0x7f050005;
     }
     public static final class style {
         public static final int defaultTheme=0x7f060000;
+        public static final int gpsTheme=0x7f060002;
+        public static final int recTheme=0x7f060001;
     }
 }
