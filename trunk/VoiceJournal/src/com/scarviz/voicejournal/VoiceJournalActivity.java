@@ -41,6 +41,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     private static final String PROMPT_MES = "記録します";
     // エラーコード
     private static final int ERR_CD_POSITION = -1;
+    // 空白
+    private static final String BLANK = " ";
+    // 改行コード
+    private static final String NEWLINE = "\n";
 
     // LocationManager用
     private LocationManager mManager;
@@ -195,16 +199,23 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	    	case REQUEST_CODE_VOICE_RECO:
 	            // 結果用
 	        	String result = "";
-	            
 	            // 結果文字列を取得する
 	            ArrayList<String> resultList = data.getStringArrayListExtra(
 	                    RecognizerIntent.EXTRA_RESULTS);
-	            
 	            // 類似する文字列を取得しているので、今回は最初の文字列を表示用として格納する
 	            result = resultList.get(0);
 	            
 	            //結果をトーストで表示する
 	            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+	            
+	            // スペースを改行に置換する
+	            try{
+	            	result = result.replaceAll(BLANK, NEWLINE);
+	            }
+	            catch(Exception e){
+	    			// エラーログ出力
+	    			Log.e("err",e.toString());
+	    		}
 	            
 	            // 結果をジャーナル用EditTextに追加
 	            AddJournal(result);
