@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">VoiceJournal</string>
+    <string name="mes_edit_save">編集内容を保存しました</string>
+    <string name="mes_edit_del">削除しました</string>
     
     <!-- ダイアログ用 -->
     <string name="dlg_btn_ok">OK</string>
@@ -15,4 +17,5 @@
     <!-- エラーメッセージ -->
     <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
     <string name="err_mes_002">位置情報取得に失敗しました</string>
+    <string name="err_mes_003">編集の保存に失敗しました</string>
 </resources>
