@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +21,10 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 /**
@@ -30,36 +33,43 @@ import android.widget.Toast;
  * @author scarviz
  *
  */
-public class VoiceJournalActivity extends Activity implements LocationListener{
-	// 返ってきた時の認証用コード(数字は適当なもので良い)
-    private static final int REQUEST_CODE_VOICE_RECO = 123;
+public class VoiceJournalActivity extends ListActivity implements LocationListener,OnItemLongClickListener{
+	// 識別用コード
+    private static final int REQUEST_CODE_VOICE_RECO = 1;
+    private static final int REQUEST_CODE_LIST_ITEM = 2;
     // プロンプト表示用
     private static final String PROMPT_MES = "記録します";
-	// 改行コード
-	private static final String NEWLINE = "\n";
 
     // LocationManager用
     private LocationManager mManager;
-    // ジャーナル用EditText
-    EditText mtxtJournal;
 
+    // リストアダプター
+    ArrayAdapter<String> mAdapter;
+    
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.journallist);
         
         // LocationManagerのインスタンス生成
         mManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         
-        // ジャーナル用EditText
-        mtxtJournal = (EditText)findViewById(R.id.txtJournal);
+        // ArrayAdapterを生成する
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        // アイテムを追加
+        mAdapter.add("タイトル１");
+        mAdapter.add("タイトル２");
+        mAdapter.add("タイトル３");
+        mAdapter.add("タイトル４");
+        mAdapter.add("タイトル５");
         
-        // 退避情報が存在する場合
-        if(savedInstanceState != null){
-	        // 退避情報を再格納する
-	        GetInstanceState(savedInstanceState);
-        }
+        // リストに設定する
+        getListView().setAdapter(mAdapter);
+        
+        // 長押しイベントリスナーを設定する
+        getListView().setOnItemLongClickListener(this);
+        
     }
     
     /**
@@ -80,6 +90,62 @@ public class VoiceJournalActivity extends Activity implements LocationListener{
 	        	break;
     	}
     }
+
+    /**
+     * リスト選択時イベント。
+     * 
+     */
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		
+		// リスト取得
+		ListView list = getListView();
+		// 選択項目を取得
+		String item = (String)list.getItemAtPosition(position);
+		
+		// 編集用Activityに遷移する
+		Intent intent = new Intent(this, EditJournalActivity.class);
+		intent.putExtra("TITLE_NO", position);  
+		intent.putExtra("ITEM",item);
+		startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
+	}
+	
+	/**
+	 * リスト選択長押しイベント。
+	 * 
+	 */
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
+			long id) {
+		// 削除確認ダイアログ
+		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+		dlg.setTitle(R.string.dlg_del_title);
+		dlg.setIcon(android.R.drawable.ic_dialog_alert);
+		dlg.setMessage(R.string.dlg_del_mes_001);
+		// OKボタン
+		dlg.setPositiveButton(R.string.dlg_btn_ok, 
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// リスト取得
+						ListView list = getListView();
+						// 選択項目を取得
+						String item = (String)list.getItemAtPosition(position);
+						// 項目を削除
+						mAdapter.remove(item);
+					}});
+		// キャンセルボタン
+		dlg.setNegativeButton(R.string.dlg_btn_cancel, 
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// 何もしない
+					}});
+		dlg.show();
+		
+		return true;
+	}
     
     /**
      * 音声認識を開始する。
@@ -114,25 +180,43 @@ public class VoiceJournalActivity extends Activity implements LocationListener{
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // 返った来たコードが認証用コードと一致する(自分で投げたインテント)、かつ、結果が正常の場合
-        if (requestCode == REQUEST_CODE_VOICE_RECO 
-        		&& resultCode == RESULT_OK) {
-            // 結果用
-        	String result = "";
-            
-            // 結果文字列を取得する
-            ArrayList<String> resultList = data.getStringArrayListExtra(
-                    RecognizerIntent.EXTRA_RESULTS);
-            
-            // 類似する文字列を取得しているので、今回は最初の文字列を表示用として格納する
-            result = resultList.get(0);
-            
-            //結果をトーストで表示する
-            Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-            
-            // 結果をジャーナル用EditTextに追加
-            mtxtJournal.append(result + NEWLINE);
-        }
+    	// 結果がOKでない場合
+    	if (resultCode != RESULT_OK){return;}
+    	
+    	// 処理毎の結果
+    	switch(requestCode){
+    		// 音声認識
+	    	case REQUEST_CODE_VOICE_RECO:
+	            // 結果用
+	        	String result = "";
+	            
+	            // 結果文字列を取得する
+	            ArrayList<String> resultList = data.getStringArrayListExtra(
+	                    RecognizerIntent.EXTRA_RESULTS);
+	            
+	            // 類似する文字列を取得しているので、今回は最初の文字列を表示用として格納する
+	            result = resultList.get(0);
+	            
+	            //結果をトーストで表示する
+	            Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+	            
+	            // 結果をジャーナル用EditTextに追加
+	            AddJournal(result);
+	    		break;
+	    	// ジャーナル編集
+	    	case REQUEST_CODE_LIST_ITEM:
+	            int position = data.getIntExtra("TITLE_NO",0);
+	            String item = data.getStringExtra("ITEM");
+	    		// リスト取得
+	    		ListView list = getListView();
+	    		// TODO : 編集結果を反映する
+				mAdapter.remove((String)list.getItemAtPosition(position));
+				mAdapter.add(item);
+	            Toast.makeText(this, "編集内容を保存しました", Toast.LENGTH_LONG).show();
+	    		break;
+	    	default:
+	    		break;
+    	}
         
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -196,7 +280,7 @@ public class VoiceJournalActivity extends Activity implements LocationListener{
 		Toast.makeText(this, locationInfo, Toast.LENGTH_SHORT).show();
 
         // 緯度と経度をジャーナル用EditTextに追加
-        mtxtJournal.append(locationInfo + NEWLINE);
+		AddJournal(locationInfo);
         
 		// リスナーを解除(ボタンワンクリックで1回取得するだけ)
 		mManager.removeUpdates(this);
@@ -238,30 +322,13 @@ public class VoiceJournalActivity extends Activity implements LocationListener{
 		return result;
 	}
 	
-    /**
-     * 退避情報を再格納する。
-     * 
-     */
-    private void GetInstanceState(Bundle inState){
-    	// 退避情報を取得する
-    	String txtJournal = inState.getString("txtJournal");	// ジャーナル内容 
-    	
-    	// 取得した値を再格納する
-    	mtxtJournal.setText(txtJournal);	// ジャーナル内容 
-    }
-    
-    /**
-     * 保持している情報を退避させる。
-     * 
-     */
-    @Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		// 退避する値の取得
-    	String txtJournal = mtxtJournal.getText().toString();	// ジャーナル内容 
-    	
-    	// 情報を退避させる
-		outState.putString("txtJournal", txtJournal);	// ジャーナル内容
+	/**
+	 * ジャーナルに追加する。
+	 * 
+	 * @param text
+	 */
+	private void AddJournal(String text){
+		mAdapter.add(text);
 	}
 
     /**
@@ -284,7 +351,7 @@ public class VoiceJournalActivity extends Activity implements LocationListener{
 		super.onDestroy();
 		// GCに優先的に開放させる
 		mManager = null;
-		mtxtJournal = null;
+		mAdapter = null;
 	}
 
 

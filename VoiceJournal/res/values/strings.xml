@@ -3,9 +3,14 @@
     <string name="app_name">VoiceJournal</string>
     
     <!-- ダイアログ用 -->
+    <string name="dlg_btn_ok">OK</string>
+    <string name="dlg_btn_cancel">Cancel</string>
+    
     <string name="dlg_title">お願い</string>
     <string name="dlg_mes_001">GPSを有効にしてください</string>
-    <string name="dlg_btn_ok">OK</string>
+    
+    <string name="dlg_del_title">削除確認</string>
+    <string name="dlg_del_mes_001">選択項目を削除しますか？</string>
     
     <!-- エラーメッセージ -->
     <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
