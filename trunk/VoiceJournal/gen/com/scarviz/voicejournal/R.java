@@ -33,18 +33,21 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
-        public static final int dlg_btn_cancel=0x7f050002;
+        public static final int dlg_btn_cancel=0x7f050004;
         /**  ダイアログ用 
          */
-        public static final int dlg_btn_ok=0x7f050001;
-        public static final int dlg_del_mes_001=0x7f050006;
-        public static final int dlg_del_title=0x7f050005;
-        public static final int dlg_mes_001=0x7f050004;
-        public static final int dlg_title=0x7f050003;
+        public static final int dlg_btn_ok=0x7f050003;
+        public static final int dlg_del_mes_001=0x7f050008;
+        public static final int dlg_del_title=0x7f050007;
+        public static final int dlg_mes_001=0x7f050006;
+        public static final int dlg_title=0x7f050005;
         /**  エラーメッセージ 
          */
-        public static final int err_mes_001=0x7f050007;
-        public static final int err_mes_002=0x7f050008;
+        public static final int err_mes_001=0x7f050009;
+        public static final int err_mes_002=0x7f05000a;
+        public static final int err_mes_003=0x7f05000b;
+        public static final int mes_edit_del=0x7f050002;
+        public static final int mes_edit_save=0x7f050001;
     }
     public static final class style {
         public static final int defaultTheme=0x7f060000;

@@ -39,11 +39,13 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     private static final int REQUEST_CODE_LIST_ITEM = 2;
     // プロンプト表示用
     private static final String PROMPT_MES = "記録します";
+    // エラーコード
+    private static final int ERR_CD_POSITION = -1;
 
     // LocationManager用
     private LocationManager mManager;
 
-    // リストアダプター
+    // リストアダプター用
     ArrayAdapter<String> mAdapter;
     
 	/** Called when the activity is first created. */
@@ -57,7 +59,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         
         // ArrayAdapterを生成する
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        // アイテムを追加
+        // TODO : DBからアイテムを取得し、リストに追加する
         mAdapter.add("タイトル１");
         mAdapter.add("タイトル２");
         mAdapter.add("タイトル３");
@@ -134,6 +136,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 						String item = (String)list.getItemAtPosition(position);
 						// 項目を削除
 						mAdapter.remove(item);
+						// 削除完了メッセージを表示
+						Toast.makeText(VoiceJournalActivity.this,
+			            		 R.string.mes_edit_del, Toast.LENGTH_SHORT).show();
+						// TODO : DBからも削除する
 					}});
 		// キャンセルボタン
 		dlg.setNegativeButton(R.string.dlg_btn_cancel, 
@@ -198,21 +204,28 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	            result = resultList.get(0);
 	            
 	            //結果をトーストで表示する
-	            Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+	            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
 	            
 	            // 結果をジャーナル用EditTextに追加
 	            AddJournal(result);
 	    		break;
 	    	// ジャーナル編集
 	    	case REQUEST_CODE_LIST_ITEM:
-	            int position = data.getIntExtra("TITLE_NO",0);
+	    		// 結果情報を取得する
+	            int position = data.getIntExtra("TITLE_NO",ERR_CD_POSITION);
 	            String item = data.getStringExtra("ITEM");
-	    		// リスト取得
+	    		// 正常に結果を受け取れなかった場合
+	            if(position == ERR_CD_POSITION){
+		            Toast.makeText(this, R.string.err_mes_003, Toast.LENGTH_SHORT).show();
+	            	break;
+	            }
+	            // リスト取得
 	    		ListView list = getListView();
-	    		// TODO : 編集結果を反映する
+	    		// 編集結果を反映する
+	    		// TODO : DBに書き込む処理も必要。
 				mAdapter.remove((String)list.getItemAtPosition(position));
-				mAdapter.add(item);
-	            Toast.makeText(this, "編集内容を保存しました", Toast.LENGTH_LONG).show();
+				mAdapter.insert(item, position);
+	            Toast.makeText(this, R.string.mes_edit_save, Toast.LENGTH_SHORT).show();
 	    		break;
 	    	default:
 	    		break;
@@ -328,11 +341,13 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	 * @param text
 	 */
 	private void AddJournal(String text){
-		mAdapter.add(text);
+		// 一番上に追加していく
+		mAdapter.insert(text, 0);
+		// TODO : DB更新処理が必要
 	}
 
     /**
-     * アクティビティ停止時処理
+     * アクティビティ停止時処理。
      * 
      */
 	@Override
@@ -343,7 +358,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	}
 	
     /**
-     * アクティビティ終了時処理
+     * アクティビティ終了時処理。
      * 
      */
 	@Override
@@ -356,21 +371,21 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 
 
     /**
-     * プロバイダが無効になったら呼び出される
+     * プロバイダが無効になったら呼び出される。
      */
 	@Override
 	public void onProviderDisabled(String provider) {
 	}
 
 	/**
-	 * プロバイダが有効になったら呼び出される
+	 * プロバイダが有効になったら呼び出される。
 	 */
 	@Override
 	public void onProviderEnabled(String provider) {
 	}
 
 	/**
-	 * プロバイダの状態が変化したら呼び出される
+	 * プロバイダの状態が変化したら呼び出される。
 	 */
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {		
