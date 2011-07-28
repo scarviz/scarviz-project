@@ -11,11 +11,17 @@
     <string name="dlg_title">お願い</string>
     <string name="dlg_mes_001">GPSを有効にしてください</string>
     
+    <string name="dlg_selected_title">選択してください</string>
+    
     <string name="dlg_del_title">削除確認</string>
     <string name="dlg_del_mes_001">選択項目を削除しますか？</string>
+    
+    <!-- メニュー -->
+    <string name="menu_add_title">新規追加</string>
     
     <!-- エラーメッセージ -->
     <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
     <string name="err_mes_002">位置情報取得に失敗しました</string>
     <string name="err_mes_003">編集の保存に失敗しました</string>
+    <string name="err_mes_004">Evernoteがインストールされていません</string>
 </resources>

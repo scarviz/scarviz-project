@@ -20,6 +20,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -45,12 +48,17 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     private static final String BLANK = " ";
     // 改行コード
     private static final String NEWLINE = "\n";
+    // Evernoteへ新規ノート作成
+    public static final String ACTION_NEW_NOTE = "com.evernote.action.CREATE_NEW_NOTE";
 
     // LocationManager用
     private LocationManager mManager;
 
     // リストアダプター用
     ArrayAdapter<String> mAdapter;
+    
+    // 新規フラグ
+    boolean mIsAddNew = false;
     
 	/** Called when the activity is first created. */
     @Override
@@ -75,6 +83,12 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         
         // 長押しイベントリスナーを設定する
         getListView().setOnItemLongClickListener(this);
+
+        // 退避情報が存在する場合
+        if(savedInstanceState != null){
+	        // 退避情報を再格納する
+	        GetInstanceState(savedInstanceState);
+        }
         
     }
     
@@ -124,8 +138,68 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
 			long id) {
-		// 削除確認ダイアログ
 		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+		dlg.setTitle(R.string.dlg_selected_title);
+		dlg.setItems(new String[] {"Evernoteへ追加","削除"}, 
+				new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch(which){
+							// "Evernoteへ追加"を選択時
+							case 0:
+								// Evernoteへ選択時処理
+								SelectedEvernote(position);
+								break;
+							// "削除"を選択時
+							case 1:
+								// 削除選択時処理
+								SelectedDelete(position);
+								break;
+							default:
+								break;
+						}
+						
+					}
+				});
+		dlg.show();
+		
+		return true;
+	}
+	
+	/**
+	 * Evernoteへ選択時処理。
+	 * 
+	 * @param position
+	 */
+	private void SelectedEvernote(final int position){
+		// リスト取得
+		ListView list = getListView();
+		// 選択項目を取得
+		String item = (String)list.getItemAtPosition(position);
+		
+		Intent intent = new Intent();
+	    intent.setAction(ACTION_NEW_NOTE);
+		// 選択項目を設定
+		intent.putExtra(Intent.EXTRA_TEXT, item);
+		try{
+			// Evernoteへ遷移
+			startActivity(intent);
+		}catch (android.content.ActivityNotFoundException ex) {
+			// 遷移に失敗した場合、エラーメッセージを表示する
+			Toast.makeText(VoiceJournalActivity.this,
+	           		 R.string.err_mes_004, Toast.LENGTH_SHORT).show();
+		} 
+	}
+	
+	/**
+	 * 削除選択時処理。
+	 * 
+	 * @param position
+	 */
+	private void SelectedDelete(final int position){
+		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+		// 削除確認ダイアログ
 		dlg.setTitle(R.string.dlg_del_title);
 		dlg.setIcon(android.R.drawable.ic_dialog_alert);
 		dlg.setMessage(R.string.dlg_del_mes_001);
@@ -153,8 +227,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 						// 何もしない
 					}});
 		dlg.show();
-		
-		return true;
 	}
     
     /**
@@ -222,9 +294,13 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	    		break;
 	    	// ジャーナル編集
 	    	case REQUEST_CODE_LIST_ITEM:
+	    		// 新規フラグをローカルに移して、フラグを下げる
+	    		boolean isNewAdd = mIsAddNew;
+				mIsAddNew = false;
+				
 	    		// 結果情報を取得する
 	            int position = data.getIntExtra("TITLE_NO",ERR_CD_POSITION);
-	            String item = data.getStringExtra("ITEM");
+	            String newItem = data.getStringExtra("ITEM");
 	    		// 正常に結果を受け取れなかった場合
 	            if(position == ERR_CD_POSITION){
 		            Toast.makeText(this, R.string.err_mes_003, Toast.LENGTH_SHORT).show();
@@ -232,10 +308,25 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	            }
 	            // リスト取得
 	    		ListView list = getListView();
-	    		// 編集結果を反映する
+	    		// 選択項目を取得
+	    		String item = (String)list.getItemAtPosition(position);
+	    		// 変更点がない場合、処理を終了する
+	    		if(newItem.equals(item)){
+	    			// 新規追加の場合は削除して処理を終了する
+	    			if(isNewAdd){
+	    				mAdapter.remove(item);
+	    			}
+	    			break; 
+	    		}
+
 	    		// TODO : DBに書き込む処理も必要。
-				mAdapter.remove((String)list.getItemAtPosition(position));
-				mAdapter.insert(item, position);
+	    		// 編集結果を反映する
+	    		// 前回情報を削除する
+				mAdapter.remove(item);
+				// 空の場合は削除たまま終了
+				if((newItem.trim()).equals("") || newItem.equals(null)){ break; }
+				// 同じ位置に編集データを挿入する
+				mAdapter.insert(newItem, position);
 	            Toast.makeText(this, R.string.mes_edit_save, Toast.LENGTH_SHORT).show();
 	    		break;
 	    	default:
@@ -355,6 +446,62 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// 一番上に追加していく
 		mAdapter.insert(text, 0);
 		// TODO : DB更新処理が必要
+	}
+	
+    /**
+     * 退避情報を再格納する。
+     * 
+     */
+    private void GetInstanceState(Bundle inState){
+    	// 退避情報を取得する
+    	mIsAddNew = inState.getBoolean("isAddNew");	// 新規フラグ
+    }
+    
+    /**
+     * 保持している情報を退避させる。
+     * 
+     */
+    @Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+    	// 情報を退避させる
+		outState.putBoolean("isAddNew", mIsAddNew);	// 新規フラグ
+	}
+	
+	/**
+	 * オプションメニューの生成
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    // XMLで定義したmenuを指定する。
+	    inflater.inflate(R.menu.mainmenu, menu);
+	    return true;
+	}
+	
+	/**
+	 * オプションメニューの選択
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    int itemId = item.getItemId();
+	    switch (itemId) {
+		    // 新規追加
+		    case R.id.menu_add:
+		    	// 新規フラグを立てる
+		    	mIsAddNew = true;
+		    	// 空データを追加
+		    	AddJournal("");
+		    	// 編集用Activityに遷移する
+				Intent intent = new Intent(this, EditJournalActivity.class);
+				intent.putExtra("TITLE_NO", 0);  
+				intent.putExtra("ITEM","");
+				startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
+		        break;
+		    default:
+		    	break;
+	    }
+	    return true;
 	}
 
     /**
