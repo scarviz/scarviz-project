@@ -5,14 +5,4 @@
         <item name="android:textSize">50px</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="recTheme">
-        <item name="android:textColor">@color/red</item>
-        <item name="android:textSize">50px</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-    <style name="gpsTheme">
-        <item name="android:textColor">@color/green</item>
-        <item name="android:textSize">50px</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 </resources>

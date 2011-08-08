@@ -3,64 +3,90 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:orientation="vertical">
-  	<LinearLayout
-  		android:id="@+id/header_menu" 
-		android:orientation="vertical"
+	android:orientation="vertical"
+	android:id="@+id/journal">
+	
+	<LinearLayout
+  		android:id="@+id/header_menu"
+		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content">
-		<TextView
-			android:text="赤丸：録音開始　三角：現在地取得"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-		</TextView>
-	
 		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<LinearLayout
-				android:orientation="horizontal"
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:gravity="center">
+			<TextView
+				android:text="録音開始"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:gravity="center">
-				<Button
-					android:text="●"
-					android:id="@+id/btnRec"
-					style="@style/recTheme"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:onClick="onClickButton">
-				</Button>
-			</LinearLayout>
-	
-			<LinearLayout
-				android:orientation="horizontal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:gravity="center">
-				<Button
-					android:text="▼"
-					android:id="@+id/btnGps"
-					style="@style/gpsTheme"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:onClick="onClickButton">
-				</Button>
-			</LinearLayout>
-	
-			<LinearLayout
-				android:orientation="horizontal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="1">
-			</LinearLayout>
-	
+				android:layout_height="wrap_content">
+			</TextView>
+			<Button
+				android:id="@+id/btnRec"
+				android:layout_width="60dip"
+				android:layout_height="60dip"
+				android:onClick="onClickButton"
+				android:background="@drawable/voice_state">
+			</Button>
 		</LinearLayout>
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:gravity="center">
+			<TextView
+				android:text="現在地取得"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+			</TextView>
+			<Button
+				android:id="@+id/btnGps"
+				android:layout_width="60dip"
+				android:layout_height="60dip"
+				android:onClick="onClickButton"
+				android:background="@drawable/mylocation_state">
+			</Button>
+		</LinearLayout>
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:gravity="center">
+			<TextView
+				android:text="検索"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+			</TextView>
+			<Button
+				android:id="@+id/btnSearch"
+				android:layout_width="60dip"
+				android:layout_height="60dip"
+				android:onClick="onClickButton"
+				android:background="@drawable/search_state">
+			</Button>
+		</LinearLayout>
+
 	</LinearLayout>
-  
+
+	<LinearLayout
+  		android:id="@+id/search_layout"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+        android:visibility="gone">
+        <EditText
+			android:id="@+id/txtSearch"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/hint_search">
+		</EditText>
+	</LinearLayout>
+
   	<ListView 
 		android:id="@+id/android:list"
 		android:layout_width="fill_parent" 

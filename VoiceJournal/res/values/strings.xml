@@ -3,6 +3,7 @@
     <string name="app_name">VoiceJournal</string>
     <string name="mes_edit_save">編集内容を保存しました</string>
     <string name="mes_edit_del">削除しました</string>
+    <string name="hint_search">検索する単語を入力してください</string>
     
     <!-- ダイアログ用 -->
     <string name="dlg_btn_ok">OK</string>
@@ -18,6 +19,7 @@
     
     <!-- メニュー -->
     <string name="menu_add_title">新規追加</string>
+    <string name="menu_background_title">背景変更</string>
     
     <!-- エラーメッセージ -->
     <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>

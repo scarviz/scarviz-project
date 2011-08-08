@@ -5,4 +5,8 @@
         android:id="@+id/menu_add"
         android:title="@string/menu_add_title"
         android:icon="@android:drawable/ic_menu_add" />
+      <item
+        android:id="@+id/menu_background"
+        android:title="@string/menu_background_title"
+        android:icon="@android:drawable/ic_menu_gallery" />
 </menu>
