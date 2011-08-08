@@ -1,7 +1,9 @@
 package com.scarviz.voicejournal;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,12 +13,17 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -27,6 +34,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +49,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	// 識別用コード
     private static final int REQUEST_CODE_VOICE_RECO = 1;
     private static final int REQUEST_CODE_LIST_ITEM = 2;
+    private static final int REQUEST_CODE_BG = 3;
     // プロンプト表示用
     private static final String PROMPT_MES = "記録します";
     // エラーコード
@@ -60,11 +70,45 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     // 新規フラグ
     boolean mIsAddNew = false;
     
+    /**
+     * ジャーナル情報構造体
+     * 
+     */
+    final public class JournalInfo{
+    	int Id;			// 一意値
+		int Position;	// リスト位置
+		Date CreateDate;// 登録日
+		Date UpdateDate;// 更新日
+		
+		/**
+		 * コンストラクタ。
+		 * 
+		 * @param id　一意値
+		 * @param position　リスト位置
+		 * @param createDate　登録日
+		 * @param updateDate　更新日
+		 */
+    	public JournalInfo(int id,int position,Date createDate,Date updateDate){
+    		Id = id;
+    		Position = position;
+    		CreateDate = createDate;
+    		UpdateDate = updateDate;
+    	}
+    }
+    
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journallist);
+        
+        // TODO : 設定領域から前回設定した背景URIを取得する
+        Uri uri = null;
+        // 背景URIがNULLでない場合
+        if(uri != null){
+			// 背景画像を設定する
+			SetBackGroundImage(uri);
+        }
         
         // LocationManagerのインスタンス生成
         mManager = (LocationManager)getSystemService(LOCATION_SERVICE);
@@ -77,6 +121,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         mAdapter.add("タイトル３");
         mAdapter.add("タイトル４");
         mAdapter.add("タイトル５");
+        
+        // TODO
+        ArrayList<JournalInfo> newinfo = new ArrayList<JournalInfo>();
+        newinfo.add(new JournalInfo(1,1,new Date(),new Date()));
         
         // リストに設定する
         getListView().setAdapter(mAdapter);
@@ -106,6 +154,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	    		// 位置情報更新開始
 	    		StartLocationUpdates();
 	            break;
+	    	case R.id.btnSearch:
+	    		// 検索開始
+	    		StartSearch();
+	    		break;
 	        default:
 	        	break;
     	}
@@ -329,6 +381,11 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 				mAdapter.insert(newItem, position);
 	            Toast.makeText(this, R.string.mes_edit_save, Toast.LENGTH_SHORT).show();
 	    		break;
+	    	// 背景画像変更
+	    	case REQUEST_CODE_BG:
+	    		// 背景画像を設定する
+	    		SetBackGroundImage(data.getData());
+	    		break;
 	    	default:
 	    		break;
     	}
@@ -376,6 +433,9 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	 */
 	@Override
 	public void onLocationChanged(Location location) {
+		// リスナーを解除(ボタンワンクリックで1回取得するだけ)
+		mManager.removeUpdates(this);
+		
 		// 緯度と経度を取得する
 		double latitude = location.getLatitude();
     	double longitude = location.getLongitude();
@@ -396,9 +456,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 
         // 緯度と経度をジャーナル用EditTextに追加
 		AddJournal(locationInfo);
-        
-		// リスナーを解除(ボタンワンクリックで1回取得するだけ)
-		mManager.removeUpdates(this);
 	}
 	
 	/**
@@ -427,7 +484,8 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 
 			//　住所情報をつなげていく
 			String buf;
-			for (int i = 0; (buf = address.getAddressLine(i)) != null; i++){
+			for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
+				buf = address.getAddressLine(i);
 				strbuf.append(buf+"　");
 			}
 
@@ -435,6 +493,30 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 検索を開始する。
+	 * 
+	 */
+	private void StartSearch(){
+		EditText txtSearch = (EditText)findViewById(R.id.txtSearch);
+		
+		LinearLayout searchLayout = (LinearLayout)findViewById(R.id.search_layout);
+		// 非表示の場合
+		if(searchLayout.getVisibility() == View.GONE){
+			// 検索領域を表示する
+			searchLayout.setVisibility(View.VISIBLE);
+		}
+		else{
+			// 検索領域を非表示にする
+			searchLayout.setVisibility(View.GONE);
+			
+			// TODO : 検索処理
+			
+			// 検索テキストは不要なので破棄する
+			txtSearch.setText(null);
+		}
 	}
 	
 	/**
@@ -446,6 +528,32 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// 一番上に追加していく
 		mAdapter.insert(text, 0);
 		// TODO : DB更新処理が必要
+	}
+	
+	/**
+	 * 背景画像を設定する。
+	 * 
+	 * @param uri
+	 */
+	private void SetBackGroundImage(Uri uri){
+		Bitmap bmp = null;
+
+		// 全体を囲っているLinearLayout
+        LinearLayout journal = (LinearLayout)findViewById(R.id.journal);
+        
+		try {
+			// URIからBitmapを取得する
+			bmp = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+        
+        // 背景画像を取得
+        Drawable backGroundImg = new BitmapDrawable(bmp);
+        // 背景画像を設定する
+        journal.setBackgroundDrawable(backGroundImg);
+        
 	}
 	
     /**
@@ -490,14 +598,22 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		    case R.id.menu_add:
 		    	// 新規フラグを立てる
 		    	mIsAddNew = true;
-		    	// 空データを追加
-		    	AddJournal("");
 		    	// 編集用Activityに遷移する
 				Intent intent = new Intent(this, EditJournalActivity.class);
 				intent.putExtra("TITLE_NO", 0);  
 				intent.putExtra("ITEM","");
 				startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
+		    	// 空データを追加
+		    	AddJournal("");
 		        break;
+		    // 背景変更
+		    case R.id.menu_background:
+		    	// 画像選択画面に遷移する
+		    	Intent intentBG = new Intent();
+		    	intentBG.setType("image/*");
+		    	intentBG.setAction(Intent.ACTION_GET_CONTENT);
+				startActivityForResult(intentBG, REQUEST_CODE_BG);
+		    	break;
 		    default:
 		    	break;
 	    }
