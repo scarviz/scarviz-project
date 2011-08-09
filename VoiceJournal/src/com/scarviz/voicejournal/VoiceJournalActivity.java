@@ -13,6 +13,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,6 +27,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.Menu;
@@ -70,6 +73,9 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     // 新規フラグ
     boolean mIsAddNew = false;
     
+    // 設定値領域用
+    private SharedPreferences mPrefs;
+    
     /**
      * ジャーナル情報構造体
      * 
@@ -102,10 +108,13 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journallist);
         
-        // TODO : 設定領域から前回設定した背景URIを取得する
-        Uri uri = null;
-        // 背景URIがNULLでない場合
-        if(uri != null){
+        // 設定領域から前回設定した背景URIを取得する
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String bgUriTxt = mPrefs.getString("URI", null);
+        
+        // 前回設定した背景URIが存在する場合
+        if(bgUriTxt != null){
+        	Uri uri = Uri.parse(bgUriTxt);
 			// 背景画像を設定する
 			SetBackGroundImage(uri);
         }
@@ -383,8 +392,11 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	    		break;
 	    	// 背景画像変更
 	    	case REQUEST_CODE_BG:
+	    		Uri uri = data.getData();
 	    		// 背景画像を設定する
-	    		SetBackGroundImage(data.getData());
+	    		SetBackGroundImage(uri);
+	    		// 設定値領域に背景URIを設定する
+	    		SetPrefsUri(uri);
 	    		break;
 	    	default:
 	    		break;
@@ -541,6 +553,13 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// 全体を囲っているLinearLayout
         LinearLayout journal = (LinearLayout)findViewById(R.id.journal);
         
+        // 背景URIがNULLの場合
+        if(uri == null){
+        	// 背景をリセットする
+        	journal.setBackgroundDrawable(null);
+        	return;
+        }
+        
 		try {
 			// URIからBitmapを取得する
 			bmp = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri));
@@ -555,6 +574,27 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         journal.setBackgroundDrawable(backGroundImg);
         
 	}
+	
+    /**
+     * 設定値領域に背景URIを設定する。
+     * 
+     * @param uri
+     */
+    private void SetPrefsUri(Uri uri){
+		Editor editor = mPrefs.edit();
+		
+		// 背景URIがNULLでない場合
+		if(uri != null){
+			// 設定値領域に背景URIを設定する
+			editor.putString("URI", uri.toString());
+		}
+		else{
+			// 背景URIを削除する
+			editor.remove("URI");
+		}
+		
+		editor.commit();
+    }
 	
     /**
      * 退避情報を再格納する。
@@ -608,16 +648,51 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		        break;
 		    // 背景変更
 		    case R.id.menu_background:
-		    	// 画像選択画面に遷移する
-		    	Intent intentBG = new Intent();
-		    	intentBG.setType("image/*");
-		    	intentBG.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(intentBG, REQUEST_CODE_BG);
+		    	//  画像変更オプションの設定処理
+		    	SetOptionBackground();
 		    	break;
 		    default:
 		    	break;
 	    }
 	    return true;
+	}
+	
+	/**
+	 * 画像変更オプションの設定処理。
+	 * 
+	 */
+	private void SetOptionBackground(){
+		// 設定用ダイアログ
+		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+		dlg.setTitle(R.string.dlg_selected_title);
+		dlg.setItems(new String[] {"背景画像選択","背景リセット"}, 
+				new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch(which){
+							// "背景画像選択"を選択時
+							case 0:
+						    	// 画像選択画面に遷移する
+						    	Intent intentBG = new Intent();
+						    	intentBG.setType("image/*");
+						    	intentBG.setAction(Intent.ACTION_GET_CONTENT);
+								startActivityForResult(intentBG, REQUEST_CODE_BG);
+								break;
+							// "背景リセット"を選択時
+							case 1:
+								// 設定領域から背景URIを削除する
+								SetPrefsUri(null);
+								// 背景をリセットする
+								SetBackGroundImage(null);
+								break;
+							default:
+								break;
+						}
+						
+					}
+				});
+		dlg.show();
 	}
 
     /**
