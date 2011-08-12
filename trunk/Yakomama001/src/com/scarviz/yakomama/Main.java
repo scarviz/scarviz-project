@@ -1,21 +1,35 @@
 package com.scarviz.yakomama;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /**
  * 電卓処理メインクラス
  * 
  * @author scarviz
- *
- * TODO :
- *  ・計算用配列には、次の文字(数字→演算子、または演算子→数字)を入力したタイミングで、現在の値を格納する。
- *  →数字の加工が不要になる？1文字ごとにメソッドを呼ばなくてすむ？
+ * 
  */
 public class Main extends Activity {
 	// 数字ボタン情報
@@ -29,6 +43,9 @@ public class Main extends Activity {
 	// 計算結果の有効フラグ
 	private boolean isEnabledResult = false;
 	
+    // 設定値領域用
+    private SharedPreferences mPrefs;
+	
 	// 演算子
 	private static final String DIV = "÷";
 	private static final String MALT = "×";
@@ -39,7 +56,10 @@ public class Main extends Activity {
 	private static final String NEWLINE = "\n";
 	// 文字：0
 	private static final String ZERO_TXT = "0";
-	
+
+	// 識別用コード
+    private static final int REQUEST_CODE_BG = 1;
+    
 	/**
 	 * 数字ボタン情報
 	 * 
@@ -59,6 +79,17 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calc);
+        
+        // 設定領域から前回設定した背景URIを取得する
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String bgUriTxt = mPrefs.getString("URI", null);
+        
+        // 前回設定した背景URIが存在する場合
+        if(bgUriTxt != null){
+        	Uri uri = Uri.parse(bgUriTxt);
+			// 背景画像を設定する
+			SetBackGroundImage(uri);
+        }
         
         // 計算内容の表示用EditTextを取得する
         mTxtCalc = (EditText)findViewById(R.id.txtCalc);
@@ -105,6 +136,10 @@ public class Main extends Activity {
 	    		// 計算結果を無効にする
 	    		isEnabledResult = false;
 	    		break;
+	    	case R.id.buttonDel:
+	    		// 計算内容の末尾を削除する
+	    		DelEndCalcTxt();
+	    		break;
 	    	case R.id.buttonDiv:
 	    		// 計算内容を追加する
 	    		AddCalcTxt(DIV,DIV);
@@ -146,6 +181,182 @@ public class Main extends Activity {
 	    		}
 	    		break;
     	}
+    }
+    
+    /**
+     * ハードキーボタン押下時(Down)イベント
+     * 
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	// 各キーが押されたかどうか
+    	boolean hasPushedKey = false;
+    	
+    	// メタキーの状態を取得する
+    	int metaState = event.getMetaState();
+
+    	// ALTが組み合わせて押された場合
+    	if ((metaState & KeyEvent.META_ALT_ON) != 0) {
+        	// メタキーと組み合わせるキーイベント実行処理
+        	hasPushedKey = ExcuteKeyEventByMetaKey(keyCode, KeyEvent.META_ALT_ON);
+    	}
+    	// SHIFTが組み合わせて押された場合
+    	else if((metaState & KeyEvent.META_SHIFT_ON) != 0){
+        	// メタキーと組み合わせるキーイベント実行処理
+        	hasPushedKey = ExcuteKeyEventByMetaKey(keyCode, KeyEvent.META_SHIFT_ON);
+    	}
+    	else{
+	    	// キーイベント実行処理
+	    	hasPushedKey = ExcuteKeyEvent(keyCode);
+    	}
+    	
+    	// 各キーが押された場合は、基底クラスのキーイベントを呼ばない
+    	if(hasPushedKey){
+    		return false;
+    	}
+    	else{
+    		return super.onKeyDown(keyCode, event);
+    	}
+    }
+    
+    /**
+     * キーイベント処理。
+     * 
+     * @param keyCode
+     * @return
+     */
+    private boolean ExcuteKeyEvent(int keyCode){
+    	// 各キーが押されたかどうか
+    	boolean hasPushedKey = true;
+    	
+    	switch(keyCode){
+    	// CLEARキー押下時
+    	case KeyEvent.KEYCODE_CLEAR:
+    		// 計算内容をクリアする
+    		mTxtCalc.setText(null);
+    		// 計算用配列をクリアする
+    		mCalcArray.clear();
+    		// 過去計算内容を改行する
+    		mTxtPastCalc.append(NEWLINE);
+    		// 計算結果を無効にする
+    		isEnabledResult = false;
+    		break;
+    	// DELキー押下時
+    	case KeyEvent.KEYCODE_DEL:
+    		// 計算内容の末尾を削除する
+    		DelEndCalcTxt();
+    		break;
+    	// /キー押下時(÷)
+    	case KeyEvent.KEYCODE_SLASH:
+    		AddCalcTxt(DIV,DIV);
+    		break;
+    	// *キー押下時(×)
+    	case KeyEvent.KEYCODE_STAR:
+    		AddCalcTxt(MALT,MALT);
+    		break;
+    	// -キー押下時
+    	case KeyEvent.KEYCODE_MINUS:
+    		AddCalcTxt(MINUS,MINUS);
+    		break;
+    	// +キー押下時
+    	case KeyEvent.KEYCODE_PLUS:
+    		AddCalcTxt(PLUS,PLUS);
+    		break;
+    	// イコールキーまたはエンターキー押下時
+    	case KeyEvent.KEYCODE_EQUALS:
+    	case KeyEvent.KEYCODE_ENTER:
+    		AddCalcTxt(EQUAL,EQUAL);
+    		// 計算を実行
+    		String resultTxt = ExecCalculation();
+    		
+    		// 現在の計算内容として計算結果を表示する
+    		mTxtCalc.setText(resultTxt);
+    		// 計算用配列をクリアし、計算結果を格納する
+    		mCalcArray.clear();
+    		mCalcArray.add(resultTxt);
+    		// 過去計算内容に計算結果を表示し、改行する
+    		mTxtPastCalc.append(resultTxt + NEWLINE);
+    		
+    		// 表示されている計算結果は継続して利用するため有効とする
+    		isEnabledResult = true;
+    		break;
+    	// 数字キーの場合
+    	case KeyEvent.KEYCODE_0:
+    	case KeyEvent.KEYCODE_1:
+    	case KeyEvent.KEYCODE_2:
+    	case KeyEvent.KEYCODE_3:
+    	case KeyEvent.KEYCODE_4:
+    	case KeyEvent.KEYCODE_5:
+    	case KeyEvent.KEYCODE_6:
+    	case KeyEvent.KEYCODE_7:
+    	case KeyEvent.KEYCODE_8:
+    	case KeyEvent.KEYCODE_9:
+    		// 数字キーのEnum値から7引いた値が、押された数値になる
+			String numTxt = String.valueOf(keyCode - 7);
+    		AddCalcTxt(numTxt,numTxt);
+    		break;
+    	default:
+    		// 各キーは押されなかったのでfalseにする
+    		hasPushedKey = false;
+    		break;
+    	}
+    	
+    	return hasPushedKey;
+    }
+    
+    /**
+     * メタキーと組み合わせるキーイベント処理。
+     * 
+     * @param keyCode
+     * @param metaKey
+     * @return
+     */
+    private boolean ExcuteKeyEventByMetaKey(int keyCode,int metaKey){
+    	// 各キーが押されたかどうか
+    	boolean hasPushedKey = true;
+    	
+    	switch(keyCode){
+    	// /キー
+    	case KeyEvent.KEYCODE_SLASH:
+    		// ALT + / キー押下時(×)
+    		if(metaKey == KeyEvent.META_ALT_ON){
+        		AddCalcTxt(MALT,MALT);
+    		}
+    		break;
+    	// -キー
+    	case KeyEvent.KEYCODE_MINUS:    		
+    		// SHIFT + - キー押下時(=)
+    		if(metaKey == KeyEvent.META_SHIFT_ON){
+        		AddCalcTxt(EQUAL,EQUAL);
+        		// 計算を実行
+        		String resultTxt = ExecCalculation();
+        		
+        		// 現在の計算内容として計算結果を表示する
+        		mTxtCalc.setText(resultTxt);
+        		// 計算用配列をクリアし、計算結果を格納する
+        		mCalcArray.clear();
+        		mCalcArray.add(resultTxt);
+        		// 過去計算内容に計算結果を表示し、改行する
+        		mTxtPastCalc.append(resultTxt + NEWLINE);
+        		
+        		// 表示されている計算結果は継続して利用するため有効とする
+        		isEnabledResult = true;
+    		}
+    		break;
+    	// Lキー
+    	case KeyEvent.KEYCODE_L:
+    		// ALT + L キー押下時(+)
+    		if(metaKey == KeyEvent.META_ALT_ON){
+        		AddCalcTxt(PLUS,PLUS);
+    		}
+    		break;
+    	default:
+    		// 各キーは押されなかったのでfalseにする
+    		hasPushedKey = false;
+    		break;
+    	}
+    	
+    	return hasPushedKey;
     }
 
 	/**
@@ -221,7 +432,7 @@ public class Main extends Activity {
 	    		mTxtCalc.setText(null);
     		}
     		else{
-	    		// 最後に格納した値と、現在の追加内容の値をint型に変換する
+	    		// 最後に格納した値と、現在の追加内容の値をdouble型に変換する
 	    		double prevNum = Double.parseDouble(prevCalc);
 	    		double nowNum = Double.parseDouble(calcTxt);
 	    		
@@ -243,6 +454,29 @@ public class Main extends Activity {
 			// 前回の計算結果を無効にする(新しく計算を行っているため)
 			isEnabledResult = false;
 		}
+    }
+    
+    /**
+     * 計算内容の末尾を削除する。
+     * 
+     */
+    private void DelEndCalcTxt(){
+    	// TODO : 作成中
+    	/*
+    	int calcArrSize = mCalcArray.size();
+    	// 未入力の場合は何もしない
+    	if(calcArrSize <= 0){return;}
+		
+    	// 計算用配列から削除する
+		mCalcArray.remove(mCalcArray.size() - 1);
+		
+    	// 計算内容のテキストから削除する
+		int txtCalcLen = mTxtCalc.length();
+		String txt = mTxtCalc.getText().delete(txtCalcLen - 1 , txtCalcLen - 1).toString();
+		mTxtCalc.setText(txt);
+		int txtPastLen = mTxtPastCalc.length();
+		mTxtPastCalc.setText(mTxtPastCalc.getText().delete(txtPastLen - 1 , txtPastLen - 1).toString());
+		*/
     }
     
     /**
@@ -457,6 +691,32 @@ public class Main extends Activity {
 		outState.putBoolean("isEnabledResult", isEnabledResult);// 計算結果の有効フラグ
 		outState.putStringArrayList("calcArray", mCalcArray);	// 計算用配列
 	}
+
+    /**
+     * アクティビティ終了時に結果を受け取る。
+     * 
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	// 結果がOKでない場合
+    	if (resultCode != RESULT_OK){return;}
+    	
+    	// 処理毎の結果
+    	switch(requestCode){
+	    	// 背景画像変更
+	    	case REQUEST_CODE_BG:
+	    		Uri uri = data.getData();
+	    		// 背景画像を設定する
+	    		SetBackGroundImage(uri);
+	    		// 設定値領域に背景URIを設定する
+	    		SetPrefsUri(uri);
+	    		break;
+	    	default:
+	    		break;
+    	}
+        
+        super.onActivityResult(requestCode, resultCode, data);
+    }
     
     /**
      * Activity終了時イベント。
@@ -471,6 +731,127 @@ public class Main extends Activity {
 		mTxtCalc = null;
 		mTxtPastCalc = null;
 		mCalcArray = null;
+		mPrefs = null;
 	}
-    
+ 
+	/**
+	 * オプションメニューの生成
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    // XMLで定義したmenuを指定する。
+	    inflater.inflate(R.menu.mainmenu, menu);
+	    return true;
+	}
+	
+	/**
+	 * オプションメニューの選択
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    int itemId = item.getItemId();
+	    switch (itemId) {
+		    // 背景変更
+		    case R.id.menu_background:
+		    	//  画像変更オプションの設定処理
+		    	SetOptionBackground();
+		    	break;
+		    default:
+		    	break;
+	    }
+	    return true;
+	}
+	
+	/**
+	 * 画像変更オプションの設定処理。
+	 * 
+	 */
+	private void SetOptionBackground(){
+		// 設定用ダイアログ
+		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+		dlg.setTitle(R.string.dlg_selected_title);
+		dlg.setItems(new String[] {"背景画像選択","背景リセット"}, 
+				new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch(which){
+							// "背景画像選択"を選択時
+							case 0:
+						    	// 画像選択画面に遷移する
+						    	Intent intentBG = new Intent();
+						    	intentBG.setType("image/*");
+						    	intentBG.setAction(Intent.ACTION_GET_CONTENT);
+								startActivityForResult(intentBG, REQUEST_CODE_BG);
+								break;
+							// "背景リセット"を選択時
+							case 1:
+								// 設定領域から背景URIを削除する
+								SetPrefsUri(null);
+								// 背景をリセットする
+								SetBackGroundImage(null);
+								break;
+							default:
+								break;
+						}
+						
+					}
+				});
+		dlg.show();
+	}
+	
+	/**
+	 * 背景画像を設定する。
+	 * 
+	 * @param uri
+	 */
+	private void SetBackGroundImage(Uri uri){
+		Bitmap bmp = null;
+
+		// 全体を囲っているLinearLayout
+        LinearLayout mainLayout = (LinearLayout)findViewById(R.id.mainLayout);
+        
+        // 背景URIがNULLの場合
+        if(uri == null){
+        	// 背景をリセットする
+        	mainLayout.setBackgroundDrawable(null);
+        	return;
+        }
+        
+		try {
+			// URIからBitmapを取得する
+			bmp = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+        
+        // 背景画像を取得
+        Drawable backGroundImg = new BitmapDrawable(bmp);
+        // 背景画像を設定する
+        mainLayout.setBackgroundDrawable(backGroundImg);
+        
+	}
+	
+    /**
+     * 設定値領域に背景URIを設定する。
+     * 
+     * @param uri
+     */
+    private void SetPrefsUri(Uri uri){
+		Editor editor = mPrefs.edit();
+		
+		// 背景URIがNULLでない場合
+		if(uri != null){
+			// 設定値領域に背景URIを設定する
+			editor.putString("URI", uri.toString());
+		}
+		else{
+			// 背景URIを削除する
+			editor.remove("URI");
+		}
+		
+		editor.commit();
+    }
 }
