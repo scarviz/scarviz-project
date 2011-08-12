@@ -4,4 +4,10 @@
     <string name="hint">過去の演算処理内容</string>
     
     <string name="err_mes_001">演算子を続けて入力することは出来ません</string>
+    
+    <!-- メニュー -->
+    <string name="menu_background_title">背景変更</string>
+    
+    <!-- ダイアログ用 -->
+    <string name="dlg_selected_title">選択してください</string>
 </resources>
