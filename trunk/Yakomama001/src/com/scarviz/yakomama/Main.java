@@ -461,22 +461,34 @@ public class Main extends Activity {
      * 
      */
     private void DelEndCalcTxt(){
-    	// TODO : 作成中
-    	/*
-    	int calcArrSize = mCalcArray.size();
+    	// 計算用配列の最後に格納した値のIndexを取得する
+    	int calcArrEndIndex = mCalcArray.size() - 1;
     	// 未入力の場合は何もしない
-    	if(calcArrSize <= 0){return;}
-		
-    	// 計算用配列から削除する
-		mCalcArray.remove(mCalcArray.size() - 1);
+    	if(calcArrEndIndex < 0){return;}
+    	
+    	// 最後に格納した値を取得する
+    	String txtCalc = mCalcArray.get(calcArrEndIndex);
+    	// 最後に格納した値が2文字以上ある場合
+    	if(txtCalc.length() >= 2){
+    		// 最後の1文字を削除した文字列を取得する
+    		String newTxt = txtCalc.subSequence(0, txtCalc.length() - 1).toString();
+			// 最後に格納した値を置き換える
+			mCalcArray.set(calcArrEndIndex, newTxt);
+    	}
+    	else{
+	    	// 計算用配列から削除する
+			mCalcArray.remove(calcArrEndIndex);
+    	}
 		
     	// 計算内容のテキストから削除する
-		int txtCalcLen = mTxtCalc.length();
-		String txt = mTxtCalc.getText().delete(txtCalcLen - 1 , txtCalcLen - 1).toString();
-		mTxtCalc.setText(txt);
-		int txtPastLen = mTxtPastCalc.length();
-		mTxtPastCalc.setText(mTxtPastCalc.getText().delete(txtPastLen - 1 , txtPastLen - 1).toString());
-		*/
+		int calcEndIndex = mTxtCalc.length() - 1;
+		if(calcEndIndex >= 0){
+			mTxtCalc.setText(mTxtCalc.getText().subSequence(0, calcEndIndex).toString());
+			
+			// 過去計算結果からも削除する
+			int pastEndIndex = mTxtPastCalc.length() - 1;
+			mTxtPastCalc.setText(mTxtPastCalc.getText().subSequence(0 , pastEndIndex).toString());
+		}
     }
     
     /**
