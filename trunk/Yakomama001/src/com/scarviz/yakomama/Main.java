@@ -127,14 +127,8 @@ public class Main extends Activity {
     public void onClickButton(View view){
     	switch(view.getId()){
 	    	case R.id.buttonClr:
-	    		// 計算内容をクリアする
-	    		mTxtCalc.setText(null);
-	    		// 計算用配列をクリアする
-	    		mCalcArray.clear();
-	    		// 過去計算内容を改行する
-	    		mTxtPastCalc.append(NEWLINE);
-	    		// 計算結果を無効にする
-	    		isEnabledResult = false;
+	    		// クリア処理を実行する
+	    		ExcuteClear();
 	    		break;
 	    	case R.id.buttonDel:
 	    		// 計算内容の末尾を削除する
@@ -232,14 +226,8 @@ public class Main extends Activity {
     	switch(keyCode){
     	// CLEARキー押下時
     	case KeyEvent.KEYCODE_CLEAR:
-    		// 計算内容をクリアする
-    		mTxtCalc.setText(null);
-    		// 計算用配列をクリアする
-    		mCalcArray.clear();
-    		// 過去計算内容を改行する
-    		mTxtPastCalc.append(NEWLINE);
-    		// 計算結果を無効にする
-    		isEnabledResult = false;
+    		// クリア処理を実行する
+    		ExcuteClear();
     		break;
     	// DELキー押下時
     	case KeyEvent.KEYCODE_DEL:
@@ -359,6 +347,21 @@ public class Main extends Activity {
     	return hasPushedKey;
     }
 
+    /**
+     * クリア処理を実行する。
+     * 
+     */
+    private void ExcuteClear(){
+		// 計算内容をクリアする
+		mTxtCalc.setText(null);
+		// 計算用配列をクリアする
+		mCalcArray.clear();
+		// 過去計算内容を改行する
+		mTxtPastCalc.append(NEWLINE);
+		// 計算結果を無効にする
+		isEnabledResult = false;
+    }
+    
 	/**
      * 計算内容を追加する。
      * 
@@ -403,7 +406,7 @@ public class Main extends Activity {
 	    	// 追加内容が演算子の場合(演算子を連続入力)
 	    	if(IsOperator(calcTxt)){
 	    			// トースト表示
-	    			Toast.makeText(this, R.string.err_mes_001, Toast.LENGTH_LONG).show();
+	    			Toast.makeText(this, R.string.err_mes_001, Toast.LENGTH_SHORT).show();
 	    			// 計算内容を追加せず戻る
 	    			return;
 	    	}
@@ -461,6 +464,13 @@ public class Main extends Activity {
      * 
      */
     private void DelEndCalcTxt(){
+    	// 前回の計算結果が有効の場合
+    	if(isEnabledResult){
+			// クリア処理を実行する
+			ExcuteClear();
+			return;
+    	}
+    	
     	// 計算用配列の最後に格納した値のIndexを取得する
     	int calcArrEndIndex = mCalcArray.size() - 1;
     	// 未入力の場合は何もしない
