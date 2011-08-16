@@ -10,7 +10,7 @@
 		android:layout_width="fill_parent"
 		android:id="@+id/txtJournal"
 		android:textColor="#ffffff"
-		android:textSize="30px"
+		android:textSize="40px"
 		android:gravity ="top"
 		android:background="#60000000">
 	</EditText>
