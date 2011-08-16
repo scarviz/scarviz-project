@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VoiceJournal</string>
+    <string name="app_name">ぷちジャーナル</string>
     <string name="mes_edit_save">編集内容を保存しました</string>
     <string name="mes_edit_del">削除しました</string>
     <string name="hint_search">検索する単語を入力してください</string>

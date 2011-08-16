@@ -10,7 +10,8 @@
   		android:id="@+id/header_menu"
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:background="#60000000">
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="wrap_content"
@@ -78,7 +79,8 @@
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="gone"
+		android:background="#60000000">
         <EditText
 			android:id="@+id/txtSearch"
 			android:layout_width="fill_parent"
@@ -91,12 +93,14 @@
 		android:id="@+id/android:list"
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
-		android:layout_below="@id/header_menu" />
+		android:layout_below="@id/header_menu"
+		android:background="#60000000" />
 	<LinearLayout
 		android:id="@+id/android:empty"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+		android:layout_height="fill_parent"
+		android:background="#60000000">
 		<TextView
 			android:text="記録はありません"
 			android:layout_width="wrap_content"
