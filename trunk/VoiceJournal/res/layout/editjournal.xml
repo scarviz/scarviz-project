@@ -3,11 +3,16 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent"
+	android:id="@+id/edit">
 	<EditText
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
-		android:id="@+id/txtJournal">
+		android:id="@+id/txtJournal"
+		android:textColor="#ffffff"
+		android:textSize="30px"
+		android:gravity ="top"
+		android:background="#60000000">
 	</EditText>
 
 </LinearLayout>

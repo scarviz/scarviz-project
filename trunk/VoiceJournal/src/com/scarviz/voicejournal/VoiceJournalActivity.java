@@ -3,7 +3,6 @@ package com.scarviz.voicejournal;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,22 +80,25 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
      * 
      */
     final public class JournalInfo{
-    	int Id;			// 一意値
-		int Position;	// リスト位置
-		Date CreateDate;// 登録日
-		Date UpdateDate;// 更新日
+    	public int Id;			// 一意値
+    	public int Position;	// リスト位置
+    	public String Contents; // コンテンツ内容
+    	public String CreateDate;// 登録日
+    	public String UpdateDate;// 更新日
 		
 		/**
 		 * コンストラクタ。
 		 * 
 		 * @param id　一意値
 		 * @param position　リスト位置
+		 * @param contents コンテンツ内容
 		 * @param createDate　登録日
 		 * @param updateDate　更新日
 		 */
-    	public JournalInfo(int id,int position,Date createDate,Date updateDate){
+    	public JournalInfo(int id,int position,String contents,String createDate,String updateDate){
     		Id = id;
     		Position = position;
+    		Contents = contents;
     		CreateDate = createDate;
     		UpdateDate = updateDate;
     	}
@@ -133,7 +135,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         
         // TODO
         ArrayList<JournalInfo> newinfo = new ArrayList<JournalInfo>();
-        newinfo.add(new JournalInfo(1,1,new Date(),new Date()));
+        newinfo.add(new JournalInfo(1,1,"","",""));
         
         // リストに設定する
         getListView().setAdapter(mAdapter);
@@ -384,7 +386,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	    		// 編集結果を反映する
 	    		// 前回情報を削除する
 				mAdapter.remove(item);
-				// 空の場合は削除たまま終了
+				// 空の場合は削除したまま終了
 				if((newItem.trim()).equals("") || newItem.equals(null)){ break; }
 				// 同じ位置に編集データを挿入する
 				mAdapter.insert(newItem, position);
@@ -716,6 +718,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// GCに優先的に開放させる
 		mManager = null;
 		mAdapter = null;
+		mPrefs = null;
 	}
 
 

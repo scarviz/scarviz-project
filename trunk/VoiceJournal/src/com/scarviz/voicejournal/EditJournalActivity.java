@@ -1,10 +1,20 @@
 package com.scarviz.voicejournal;
 
+import java.io.FileNotFoundException;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 /**
  * ジャーナル編集用クラス
@@ -20,11 +30,25 @@ public class EditJournalActivity extends Activity {
     // リストの選択番号
     private int mPosition;
 	
+    // 設定値領域用
+    private SharedPreferences mPrefs;
+    
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.editjournal);
 
+        // 設定領域から前回設定した背景URIを取得する
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String bgUriTxt = mPrefs.getString("URI", null);
+        
+        // 前回設定した背景URIが存在する場合
+        if(bgUriTxt != null){
+        	Uri uri = Uri.parse(bgUriTxt);
+			// 背景画像を設定する
+			SetBackGroundImage(uri);
+        }
+        
         // ジャーナル用EditText
         mtxtJournal = (EditText)findViewById(R.id.txtJournal);
 
@@ -65,6 +89,39 @@ public class EditJournalActivity extends Activity {
 
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	/**
+	 * 背景画像を設定する。
+	 * 
+	 * @param uri
+	 */
+	private void SetBackGroundImage(Uri uri){
+		Bitmap bmp = null;
+
+		// 全体を囲っているLinearLayout
+        LinearLayout editLayout = (LinearLayout)findViewById(R.id.edit);
+        
+        // 背景URIがNULLの場合
+        if(uri == null){
+        	// 背景をリセットする
+        	editLayout.setBackgroundDrawable(null);
+        	return;
+        }
+        
+		try {
+			// URIからBitmapを取得する
+			bmp = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+        
+        // 背景画像を取得
+        Drawable backGroundImg = new BitmapDrawable(bmp);
+        // 背景画像を設定する
+        editLayout.setBackgroundDrawable(backGroundImg);
+        
+	}
 
     /**
      * 退避情報を再格納する。
@@ -103,6 +160,7 @@ public class EditJournalActivity extends Activity {
 		super.onDestroy();
 		// GCに優先的に開放させる
 		mtxtJournal = null;
+		mPrefs = null;
 	}
 
 }
