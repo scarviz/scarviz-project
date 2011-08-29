@@ -31,13 +31,21 @@ public class Utils {
 			// 読み込み用SQLiteDatabaseを生成
 			db = helper.getWritableDatabase();
 			
+			String selection = null;
+			String[] selectionArgs = null;
+			// 検索文字がNULLでない場合は、値を設定する
+			if(!(contents == null)){
+				selection = DatabaseHelper.FIELD_CONTENTS + " = ?";
+				selectionArgs = new String[] {contents};
+			}
+			
 			// 検索処理の実行
 			cur = db.query(DatabaseHelper.TABLE_VOICE_JOURNAL,
 					new String[] {BaseColumns._ID, DatabaseHelper.FIELD_POSITION, DatabaseHelper.FIELD_CONTENTS, 
 									DatabaseHelper.FIELD_CREATE_DATE,DatabaseHelper.FIELD_UPDATE_DATE},
-					DatabaseHelper.FIELD_CONTENTS + " = ?",
-					new String[] {contents},
-					null,null,DatabaseHelper.FIELD_POSITION,null);
+									selection,
+									selectionArgs,
+									null,null,DatabaseHelper.FIELD_POSITION,null);
 			if(cur != null && cur.moveToFirst()){
 				do{
 					// 行データの各カラムから値を取得する

@@ -3,6 +3,7 @@ package com.scarviz.voicejournal;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -68,6 +69,8 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 
     // リストアダプター用
     ArrayAdapter<String> mAdapter;
+    // ジャーナル情報用
+    ArrayList<JournalInfo> mJournalInfo;
     
     // 新規フラグ
     boolean mIsAddNew = false;
@@ -120,28 +123,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 			// 背景画像を設定する
 			SetBackGroundImage(uri);
         }
-        
-        // LocationManagerのインスタンス生成
-        mManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-        
-        // ArrayAdapterを生成する
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        // TODO : DBからアイテムを取得し、リストに追加する
-        mAdapter.add("タイトル１");
-        mAdapter.add("タイトル２");
-        mAdapter.add("タイトル３");
-        mAdapter.add("タイトル４");
-        mAdapter.add("タイトル５");
-        
-        // TODO
-        ArrayList<JournalInfo> newinfo = new ArrayList<JournalInfo>();
-        newinfo.add(new JournalInfo(1,1,"","",""));
-        
-        // リストに設定する
-        getListView().setAdapter(mAdapter);
-        
-        // 長押しイベントリスナーを設定する
-        getListView().setOnItemLongClickListener(this);
 
         // 退避情報が存在する場合
         if(savedInstanceState != null){
@@ -151,7 +132,39 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         
     }
     
-    /**
+    @Override
+	protected void onResume() {
+		super.onResume();
+		
+        // 回転時対応
+        // 検索用EditText
+		EditText txtSearch = (EditText)findViewById(R.id.txtSearch);
+		// 検索文字を取得する
+		String searchStr = txtSearch.getText().toString();
+		// 検索文字が空白の場合はNULLに変更する
+		if((searchStr.trim()).equals("")){
+			searchStr = null;
+		}
+        
+        // LocationManagerのインスタンス生成
+        mManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        
+        // ArrayAdapterを生成する
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        // DBからアイテムを取得し、リストに追加する
+        mJournalInfo = Utils.getJournalInfo(this, searchStr);
+        for(JournalInfo item : mJournalInfo){
+            mAdapter.add(item.Contents);
+        }
+        
+        // リストに設定する
+        getListView().setAdapter(mAdapter);
+        
+        // 長押しイベントリスナーを設定する
+        getListView().setOnItemLongClickListener(this);
+	}
+
+	/**
      * ボタン押下時イベント。
      *
      */
@@ -201,6 +214,9 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
 			long id) {
+		// コンテキスト
+		final Context context = this;
+		// ダイアログ
 		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		dlg.setTitle(R.string.dlg_selected_title);
 		dlg.setItems(new String[] {"Evernoteへ追加","削除"}, 
@@ -217,7 +233,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 							// "削除"を選択時
 							case 1:
 								// 削除選択時処理
-								SelectedDelete(position);
+								SelectedDelete(context, position);
 								break;
 							default:
 								break;
@@ -258,9 +274,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	/**
 	 * 削除選択時処理。
 	 * 
+	 * @param context
 	 * @param position
 	 */
-	private void SelectedDelete(final int position){
+	private void SelectedDelete(final Context context, final int position){
 		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		// 削除確認ダイアログ
 		dlg.setTitle(R.string.dlg_del_title);
@@ -277,10 +294,12 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 						String item = (String)list.getItemAtPosition(position);
 						// 項目を削除
 						mAdapter.remove(item);
+						// ジャーナル情報、DBから削除する
+						RemoveJournal(context,item);
+						
 						// 削除完了メッセージを表示
 						Toast.makeText(VoiceJournalActivity.this,
 			            		 R.string.mes_edit_del, Toast.LENGTH_SHORT).show();
-						// TODO : DBからも削除する
 					}});
 		// キャンセルボタン
 		dlg.setNegativeButton(R.string.dlg_btn_cancel, 
@@ -369,27 +388,55 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		            Toast.makeText(this, R.string.err_mes_003, Toast.LENGTH_SHORT).show();
 	            	break;
 	            }
+	           
+    			// 新規追加の場合
+    			if(isNewAdd){
+    				// 空の場合はそのまま終了
+    				if((newItem.trim()).equals("") || newItem.equals(null)){ break; }
+    		    	
+    				// データを追加して終了
+    		    	AddJournal(newItem);
+    	            Toast.makeText(this, R.string.mes_edit_save, Toast.LENGTH_SHORT).show();
+    	    		break;
+    			}
+	            
 	            // リスト取得
 	    		ListView list = getListView();
 	    		// 選択項目を取得
 	    		String item = (String)list.getItemAtPosition(position);
 	    		// 変更点がない場合、処理を終了する
 	    		if(newItem.equals(item)){
-	    			// 新規追加の場合は削除して処理を終了する
-	    			if(isNewAdd){
-	    				mAdapter.remove(item);
-	    			}
 	    			break; 
 	    		}
 
-	    		// TODO : DBに書き込む処理も必要。
 	    		// 編集結果を反映する
 	    		// 前回情報を削除する
 				mAdapter.remove(item);
 				// 空の場合は削除したまま終了
-				if((newItem.trim()).equals("") || newItem.equals(null)){ break; }
+				if((newItem.trim()).equals("") || newItem.equals(null)){
+					// ジャーナル情報、DBから削除する
+					RemoveJournal(this,item);
+					break;
+				}
 				// 同じ位置に編集データを挿入する
 				mAdapter.insert(newItem, position);
+
+				// ジャーナル情報分まわす
+				for(int i = 0; i < mJournalInfo.size(); i++){
+					// 編集対象項目の場合
+					if(mJournalInfo.get(i).Contents.equals(item)){
+						// 編集前情報を取得
+						JournalInfo oldInfo = mJournalInfo.get(i);
+						// 編集後のジャーナル情報を作成
+						JournalInfo newInfo
+							= new JournalInfo(oldInfo.Id, oldInfo.Position, newItem, oldInfo.CreateDate, GetToDay());
+						// ジャーナル情報を更新
+						mJournalInfo.set(i, newInfo);
+						// DBを更新
+						Utils.updateJournalInfo(this, newInfo);
+						break;
+					}
+				}
 	            Toast.makeText(this, R.string.mes_edit_save, Toast.LENGTH_SHORT).show();
 	    		break;
 	    	// 背景画像変更
@@ -425,7 +472,8 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								// TODO : 設定画面を開く
+								// 設定画面を開く
+								startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 							}});
 				dlg.show();
 				return;
@@ -526,22 +574,86 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 			// 検索領域を非表示にする
 			searchLayout.setVisibility(View.GONE);
 			
-			// TODO : 検索処理
+			// 検索文字を取得する
+			String searchStr = txtSearch.getText().toString();
+			// 検索文字が空白の場合はNULLに変更する
+			if((searchStr.trim()).equals("")){
+				searchStr = null;
+			}
 			
-			// 検索テキストは不要なので破棄する
-			txtSearch.setText(null);
+			// リストをリセットする
+	        mAdapter.clear();
+			// 検索処理
+			mJournalInfo = Utils.getJournalInfo(this, searchStr);
+	        // DBから取得した情報をリストに追加する
+	        for(JournalInfo item : mJournalInfo){
+	            mAdapter.add(item.Contents);
+	        }
+	        // リストに設定する
+	        getListView().setAdapter(mAdapter);
+			
 		}
 	}
 	
 	/**
-	 * ジャーナルに追加する。
+	 * 今日の日付を取得する
+	 * 
+	 * @return
+	 */
+	private String GetToDay(){
+		String result = null;
+		// 今日の日付を取得する
+		final Calendar calendar = Calendar.getInstance();
+		final int year = calendar.get(Calendar.YEAR);
+		final int month = calendar.get(Calendar.MONTH);
+		final int day = calendar.get(Calendar.DAY_OF_MONTH);
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int minute = calendar.get(Calendar.MINUTE);
+		final int second = calendar.get(Calendar.SECOND);
+		// 今日の日付を整形する
+		result = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+		
+		return result;
+	}
+	
+	/**
+	 * ジャーナル情報とDBに追加する。
 	 * 
 	 * @param text
 	 */
 	private void AddJournal(String text){
-		// 一番上に追加していく
+		// 一番上に追加する
 		mAdapter.insert(text, 0);
-		// TODO : DB更新処理が必要
+		
+		// 今日の日付を取得する
+		String toDay = GetToDay();
+		
+		// DB更新処理
+		JournalInfo info = new JournalInfo(0, 0, text, toDay, toDay);
+		Utils.createJournalInfo(this, info);
+		
+		// ジャーナル情報に追加
+		mJournalInfo.add(info);
+	}
+	
+	/**
+	 * ジャーナル情報とDBから削除する。
+	 * 
+	 * @param context
+	 * @param item
+	 */
+	private void RemoveJournal(Context context, String item){
+		// ジャーナル情報分まわす
+		for(int i = 0; i < mJournalInfo.size(); i++){
+			// 削除対象項目の場合
+			if(mJournalInfo.get(i).Contents.equals(item)){
+				// DBから削除
+				Utils.deleteJournalInfo(context, mJournalInfo.get(i).Id);
+				// ジャーナル情報から削除
+				mJournalInfo.remove(i);
+				break;
+			}
+		}
 	}
 	
 	/**
@@ -645,8 +757,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 				intent.putExtra("TITLE_NO", 0);  
 				intent.putExtra("ITEM","");
 				startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
-		    	// 空データを追加
-		    	AddJournal("");
 		        break;
 		    // 背景変更
 		    case R.id.menu_background:
