@@ -92,7 +92,7 @@
   	<ListView 
 		android:id="@+id/android:list"
 		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
+		android:layout_height="fill_parent"
 		android:layout_below="@id/header_menu"
 		android:background="#60000000" />
 	<LinearLayout
@@ -103,8 +103,10 @@
 		android:background="#60000000">
 		<TextView
 			android:text="記録はありません"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:textSize="40px"
+			android:gravity="center">
 		</TextView>
 	</LinearLayout>
 	
