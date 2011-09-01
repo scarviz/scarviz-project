@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
@@ -180,7 +181,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	            break;
 	    	case R.id.btnSearch:
 	    		// 検索開始
-	    		StartSearch();
+	    		StartSearch(view);
 	    		break;
 	        default:
 	        	break;
@@ -200,10 +201,25 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// 選択項目を取得
 		String item = (String)list.getItemAtPosition(position);
 		
+		String create = "";
+		String update = "";
+		// ジャーナル情報分まわす
+		for(int i = 0; i < mJournalInfo.size(); i++){
+			// 編集対象項目の場合
+			if(mJournalInfo.get(i).Contents.equals(item)){
+				// 編集前情報を取得
+				JournalInfo info = mJournalInfo.get(i);
+				create = info.CreateDate;
+				update = info.UpdateDate;
+			}
+		}
+		
 		// 編集用Activityに遷移する
 		Intent intent = new Intent(this, EditJournalActivity.class);
 		intent.putExtra("TITLE_NO", position);  
 		intent.putExtra("ITEM",item);
+		intent.putExtra("CREATE",create);
+		intent.putExtra("UPDATE",update);
 		startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
 	}
 	
@@ -219,16 +235,16 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// ダイアログ
 		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		dlg.setTitle(R.string.dlg_selected_title);
-		dlg.setItems(new String[] {"Evernoteへ追加","削除"}, 
+		dlg.setItems(new String[] {"テキスト共有","削除"}, 
 				new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch(which){
-							// "Evernoteへ追加"を選択時
+							// "テキスト共有"を選択時
 							case 0:
-								// Evernoteへ選択時処理
-								SelectedEvernote(position);
+								// テキスト共有選択時処理
+								SelectedShare(position);
 								break;
 							// "削除"を選択時
 							case 1:
@@ -247,23 +263,24 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	}
 	
 	/**
-	 * Evernoteへ選択時処理。
+	 * テキスト共有選択時処理。
 	 * 
 	 * @param position
 	 */
-	private void SelectedEvernote(final int position){
+	private void SelectedShare(final int position){
 		// リスト取得
 		ListView list = getListView();
 		// 選択項目を取得
 		String item = (String)list.getItemAtPosition(position);
 		
-		Intent intent = new Intent();
-	    intent.setAction(ACTION_NEW_NOTE);
-		// 選択項目を設定
-		intent.putExtra(Intent.EXTRA_TEXT, item);
+		Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+	    intent.setType("text/plain");
+	    intent.putExtra(Intent.EXTRA_TEXT, item);
+
 		try{
-			// Evernoteへ遷移
-			startActivity(intent);
+			// 共有一覧から選択し、遷移する
+		    startActivity(Intent.createChooser(
+		            intent, getString(R.string.mes_share)));
 		}catch (android.content.ActivityNotFoundException ex) {
 			// 遷移に失敗した場合、エラーメッセージを表示する
 			Toast.makeText(VoiceJournalActivity.this,
@@ -561,7 +578,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	 * 検索を開始する。
 	 * 
 	 */
-	private void StartSearch(){
+	private void StartSearch(View view){
 		EditText txtSearch = (EditText)findViewById(R.id.txtSearch);
 		
 		LinearLayout searchLayout = (LinearLayout)findViewById(R.id.search_layout);
@@ -573,6 +590,11 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		else{
 			// 検索領域を非表示にする
 			searchLayout.setVisibility(View.GONE);
+			
+			// ソフトキーボードを消す
+			InputMethodManager inputMethMan
+				= (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputMethMan.hideSoftInputFromWindow(view.getWindowToken(), 0);
 			
 			// 検索文字を取得する
 			String searchStr = txtSearch.getText().toString();
@@ -602,10 +624,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	 */
 	private String GetToDay(){
 		String result = null;
-		// 今日の日付を取得する
+		// 今日の日付を取得する(月は0~11を返すので、+1する)
 		final Calendar calendar = Calendar.getInstance();
 		final int year = calendar.get(Calendar.YEAR);
-		final int month = calendar.get(Calendar.MONTH);
+		final int month = calendar.get(Calendar.MONTH) + 1;
 		final int day = calendar.get(Calendar.DAY_OF_MONTH);
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		final int minute = calendar.get(Calendar.MINUTE);
@@ -756,6 +778,8 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 				Intent intent = new Intent(this, EditJournalActivity.class);
 				intent.putExtra("TITLE_NO", 0);  
 				intent.putExtra("ITEM","");
+				intent.putExtra("CREATE","なし");
+				intent.putExtra("UPDATE","なし");
 				startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
 		        break;
 		    // 背景変更

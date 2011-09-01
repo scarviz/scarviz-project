@@ -31,21 +31,23 @@ public class Utils {
 			// 読み込み用SQLiteDatabaseを生成
 			db = helper.getWritableDatabase();
 			
-			String selection = null;
-			String[] selectionArgs = null;
+			String selection = "";
 			// 検索文字がNULLでない場合は、値を設定する
 			if(!(contents == null)){
-				selection = DatabaseHelper.FIELD_CONTENTS + " = ?";
-				selectionArgs = new String[] {contents};
+				selection = " WHERE " + DatabaseHelper.FIELD_CONTENTS + " LIKE '" + contents + "%'";
 			}
 			
+			// 並び順を指定する
+			String order = "";
+			// IDの降順
+			order = BaseColumns._ID + " DESC";
+			
+			// 検索SQL文
+			String sql = "SELECT * FROM " + DatabaseHelper.TABLE_VOICE_JOURNAL 
+					+ selection + " ORDER BY " + order;
 			// 検索処理の実行
-			cur = db.query(DatabaseHelper.TABLE_VOICE_JOURNAL,
-					new String[] {BaseColumns._ID, DatabaseHelper.FIELD_POSITION, DatabaseHelper.FIELD_CONTENTS, 
-									DatabaseHelper.FIELD_CREATE_DATE,DatabaseHelper.FIELD_UPDATE_DATE},
-									selection,
-									selectionArgs,
-									null,null,DatabaseHelper.FIELD_POSITION,null);
+			cur = db.rawQuery(sql, null);
+			
 			if(cur != null && cur.moveToFirst()){
 				do{
 					// 行データの各カラムから値を取得する

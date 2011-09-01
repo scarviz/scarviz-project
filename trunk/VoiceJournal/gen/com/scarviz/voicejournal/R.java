@@ -31,49 +31,55 @@ public final class R {
         public static final int voice_state=0x7f020009;
     }
     public static final class id {
-        public static final int btnGps=0x7f080005;
-        public static final int btnRec=0x7f080004;
-        public static final int btnSearch=0x7f080006;
-        public static final int edit=0x7f080000;
-        public static final int header_menu=0x7f080003;
-        public static final int journal=0x7f080002;
-        public static final int menu_add=0x7f080009;
-        public static final int menu_background=0x7f08000a;
-        public static final int search_layout=0x7f080007;
-        public static final int txtJournal=0x7f080001;
-        public static final int txtSearch=0x7f080008;
+        public static final int btnGps=0x7f080006;
+        public static final int btnRec=0x7f080005;
+        public static final int btnSearch=0x7f080007;
+        public static final int edit=0x7f080001;
+        public static final int header_menu=0x7f080004;
+        public static final int journal=0x7f080003;
+        public static final int menu_add=0x7f08000b;
+        public static final int menu_background=0x7f08000c;
+        public static final int menu_cancel=0x7f08000a;
+        public static final int search_layout=0x7f080008;
+        public static final int txtDate=0x7f080000;
+        public static final int txtJournal=0x7f080002;
+        public static final int txtSearch=0x7f080009;
     }
     public static final class layout {
-        public static final int editjournal=0x7f030000;
-        public static final int journallist=0x7f030001;
+        public static final int customtitle=0x7f030000;
+        public static final int editjournal=0x7f030001;
+        public static final int journallist=0x7f030002;
     }
     public static final class menu {
-        public static final int mainmenu=0x7f070000;
+        public static final int editmenu=0x7f070000;
+        public static final int mainmenu=0x7f070001;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
-        public static final int dlg_btn_cancel=0x7f050005;
+        public static final int dlg_btn_cancel=0x7f050006;
         /**  ダイアログ用 
          */
-        public static final int dlg_btn_ok=0x7f050004;
-        public static final int dlg_del_mes_001=0x7f05000a;
-        public static final int dlg_del_title=0x7f050009;
-        public static final int dlg_mes_001=0x7f050007;
-        public static final int dlg_selected_title=0x7f050008;
-        public static final int dlg_title=0x7f050006;
+        public static final int dlg_btn_ok=0x7f050005;
+        public static final int dlg_del_mes_001=0x7f05000b;
+        public static final int dlg_del_title=0x7f05000a;
+        public static final int dlg_mes_001=0x7f050008;
+        public static final int dlg_selected_title=0x7f050009;
+        public static final int dlg_title=0x7f050007;
         /**  エラーメッセージ 
          */
-        public static final int err_mes_001=0x7f05000d;
-        public static final int err_mes_002=0x7f05000e;
-        public static final int err_mes_003=0x7f05000f;
-        public static final int err_mes_004=0x7f050010;
+        public static final int err_mes_001=0x7f05000f;
+        public static final int err_mes_002=0x7f050010;
+        public static final int err_mes_003=0x7f050011;
+        public static final int err_mes_004=0x7f050012;
         public static final int hint_search=0x7f050003;
         /**  メニュー 
          */
-        public static final int menu_add_title=0x7f05000b;
-        public static final int menu_background_title=0x7f05000c;
+        public static final int menu_add_title=0x7f05000c;
+        public static final int menu_background_title=0x7f05000d;
+        public static final int menu_cancel_title=0x7f05000e;
         public static final int mes_edit_del=0x7f050002;
         public static final int mes_edit_save=0x7f050001;
+        public static final int mes_share=0x7f050004;
     }
     public static final class style {
         public static final int defaultTheme=0x7f060000;
