@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="line_list">
+		<item>@string/line_default</item>
+		<item>@string/line_black</item>
+		<item>@string/line_blue</item>
+		<item>@string/line_brown</item>
+		<item>@string/line_gray</item>
+		<item>@string/line_green</item>
+		<item>@string/line_lightblue</item>
+		<item>@string/line_orange</item>
+		<item>@string/line_pink</item>
+		<item>@string/line_purple</item>
+		<item>@string/line_red</item>
+		<item>@string/line_white</item>
+		<item>@string/line_yellow</item>
+	</string-array>
+	
+	<string-array name="line_list_values">  
+		<item>@string/value_default</item>
+		<item>@string/value_black</item>
+		<item>@string/value_blue</item>
+		<item>@string/value_brown</item>
+		<item>@string/value_gray</item>
+		<item>@string/value_green</item>
+		<item>@string/value_lightblue</item>
+		<item>@string/value_orange</item>
+		<item>@string/value_pink</item>
+		<item>@string/value_purple</item>
+		<item>@string/value_red</item>
+		<item>@string/value_white</item>
+		<item>@string/value_yellow</item>
+	</string-array>
+</resources>
