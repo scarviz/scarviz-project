@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -51,12 +52,13 @@ public class EditJournalActivity extends Activity {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String bgUriTxt = mPrefs.getString("URI", null);
         
+        Uri uri = null;
         // 前回設定した背景URIが存在する場合
         if(bgUriTxt != null){
-        	Uri uri = Uri.parse(bgUriTxt);
-			// 背景画像を設定する
-			SetBackGroundImage(uri);
+        	uri = Uri.parse(bgUriTxt);
         }
+		// 背景画像を設定する
+		SetBackGroundImage(uri);
         
         // ジャーナル用EditText
         mtxtJournal = (EditText)findViewById(R.id.txtJournal);
@@ -73,18 +75,16 @@ public class EditJournalActivity extends Activity {
     		// EditTextに表示する
     		mtxtJournal.setText(item);
     		
-    		// 日付部分のみを表示
-            String[] createArg = intent.getStringExtra("CREATE").split(" ");
-            mCreate = createArg[0];
-            String[] updateArg = intent.getStringExtra("UPDATE").split(" ");
-            mUpdate = updateArg[0];
+    		// 日付を表示
+            mCreate = intent.getStringExtra("CREATE");
+            mUpdate = intent.getStringExtra("UPDATE");
         }
         
         // カスタムタイトルバーの設定
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitle);
         // 日付表示
         TextView txtDate = (TextView)findViewById(R.id.txtDate);
-        txtDate.setText("登録日：" + mCreate + "　" + "更新日：" + mUpdate);
+        txtDate.setText("登録日：" + mCreate + "\n" + "更新日：" + mUpdate);
 	}
 
     /**
@@ -110,6 +110,21 @@ public class EditJournalActivity extends Activity {
 
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	/**
+     * ボタン押下時イベント。
+     *
+     */
+    public void onClickButton(View view){
+    	switch(view.getId()){
+	    	case R.id.btnBack:
+				// 編集をキャンセルして戻る
+		    	CancelEdit();
+	            break;
+	        default:
+	        	break;
+    	}
+    }
 	
 	/**
 	 * 背景画像を設定する。
@@ -142,6 +157,16 @@ public class EditJournalActivity extends Activity {
         // 背景画像を設定する
         editLayout.setBackgroundDrawable(backGroundImg);
         
+	}
+	
+	/**
+	 * 編集をキャンセルして戻る。
+	 * 
+	 */
+	private void CancelEdit(){
+		// 結果にキャンセルをかえす
+		setResult(RESULT_CANCELED);
+		finish();
 	}
 
     /**
@@ -197,9 +222,8 @@ public class EditJournalActivity extends Activity {
 	    switch (itemId) {
 		    // 編集取消し
 		    case R.id.menu_cancel:
-				// 結果にキャンセルをかえす
-				setResult(RESULT_CANCELED);
-				finish();				
+				// 編集をキャンセルして戻る
+		    	CancelEdit();	
 		        break;
 		    default:
 		    	break;

@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -53,7 +52,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	// 識別用コード
     private static final int REQUEST_CODE_VOICE_RECO = 1;
     private static final int REQUEST_CODE_LIST_ITEM = 2;
-    private static final int REQUEST_CODE_BG = 3;
     // プロンプト表示用
     private static final String PROMPT_MES = "記録します";
     // エラーコード
@@ -62,8 +60,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     private static final String BLANK = " ";
     // 改行コード
     private static final String NEWLINE = "\n";
-    // Evernoteへ新規ノート作成
-    public static final String ACTION_NEW_NOTE = "com.evernote.action.CREATE_NEW_NOTE";
 
     // LocationManager用
     private LocationManager mManager;
@@ -113,17 +109,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journallist);
-        
-        // 設定領域から前回設定した背景URIを取得する
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String bgUriTxt = mPrefs.getString("URI", null);
-        
-        // 前回設定した背景URIが存在する場合
-        if(bgUriTxt != null){
-        	Uri uri = Uri.parse(bgUriTxt);
-			// 背景画像を設定する
-			SetBackGroundImage(uri);
-        }
 
         // 退避情報が存在する場合
         if(savedInstanceState != null){
@@ -136,7 +122,26 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     @Override
 	protected void onResume() {
 		super.onResume();
-		
+        // 設定領域から前回設定した背景URIを取得する
+        String bgUriTxt = mPrefs.getString("URI", null);
+        Uri uri = null;
+        // 前回設定した背景URIが存在する場合
+        if(bgUriTxt != null){
+        	uri = Uri.parse(bgUriTxt);
+        }
+		// 背景画像を設定する
+		SetBackGroundImage(uri);
+
+        // 設定領域から前回設定した区切り線IDを取得する
+        String lineId = mPrefs.getString("LINE_ID", null);
+        Drawable line = null;
+        if(lineId != null){
+        	int id = Integer.parseInt(lineId);
+            line = getResources().getDrawable(id);
+        }
+        // リストの区切り線を変更する
+        getListView().setDivider(line);
+
         // 回転時対応
         // 検索用EditText
 		EditText txtSearch = (EditText)findViewById(R.id.txtSearch);
@@ -456,14 +461,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 				}
 	            Toast.makeText(this, R.string.mes_edit_save, Toast.LENGTH_SHORT).show();
 	    		break;
-	    	// 背景画像変更
-	    	case REQUEST_CODE_BG:
-	    		Uri uri = data.getData();
-	    		// 背景画像を設定する
-	    		SetBackGroundImage(uri);
-	    		// 設定値領域に背景URIを設定する
-	    		SetPrefsUri(uri);
-	    		break;
 	    	default:
 	    		break;
     	}
@@ -712,27 +709,6 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	}
 	
     /**
-     * 設定値領域に背景URIを設定する。
-     * 
-     * @param uri
-     */
-    private void SetPrefsUri(Uri uri){
-		Editor editor = mPrefs.edit();
-		
-		// 背景URIがNULLでない場合
-		if(uri != null){
-			// 設定値領域に背景URIを設定する
-			editor.putString("URI", uri.toString());
-		}
-		else{
-			// 背景URIを削除する
-			editor.remove("URI");
-		}
-		
-		editor.commit();
-    }
-	
-    /**
      * 退避情報を再格納する。
      * 
      */
@@ -782,10 +758,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 				intent.putExtra("UPDATE","なし");
 				startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
 		        break;
-		    // 背景変更
-		    case R.id.menu_background:
-		    	//  画像変更オプションの設定処理
-		    	SetOptionBackground();
+		    // 設定
+		    case R.id.menu_pref:
+		    	// 設定画面を表示する
+		    	DisplayPref();
 		    	break;
 		    default:
 		    	break;
@@ -794,41 +770,12 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	}
 	
 	/**
-	 * 画像変更オプションの設定処理。
+	 * 設定画面を表示する。
 	 * 
 	 */
-	private void SetOptionBackground(){
-		// 設定用ダイアログ
-		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-		dlg.setTitle(R.string.dlg_selected_title);
-		dlg.setItems(new String[] {"背景画像選択","背景リセット"}, 
-				new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch(which){
-							// "背景画像選択"を選択時
-							case 0:
-						    	// 画像選択画面に遷移する
-						    	Intent intentBG = new Intent();
-						    	intentBG.setType("image/*");
-						    	intentBG.setAction(Intent.ACTION_GET_CONTENT);
-								startActivityForResult(intentBG, REQUEST_CODE_BG);
-								break;
-							// "背景リセット"を選択時
-							case 1:
-								// 設定領域から背景URIを削除する
-								SetPrefsUri(null);
-								// 背景をリセットする
-								SetBackGroundImage(null);
-								break;
-							default:
-								break;
-						}
-						
-					}
-				});
-		dlg.show();
+	private void DisplayPref(){
+    	Intent intentPref = new Intent(this, JournalPreferenceActivity.class);
+		startActivity(intentPref);
 	}
 
     /**

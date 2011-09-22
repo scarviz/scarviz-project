@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:title="@string/pref_background_title">
+		<PreferenceScreen
+			android:key="@string/pref_background_select"
+			android:title="@string/pref_background_select_title"
+			android:summary="@string/pref_background_select_summary" />
+		<PreferenceScreen
+			android:key="@string/pref_background_reset"
+			android:title="@string/pref_background_reset_title"
+			android:summary="@string/pref_background_reset_summary" />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:title="@string/pref_line_title">
+		<ListPreference
+			android:key="@string/pref_line_select"
+			android:title="@string/pref_line_select_title"
+			android:entries="@array/line_list"
+			android:entryValues="@array/line_list_values"
+			android:defaultValue="@string/value_default" />
+	</PreferenceCategory>
+</PreferenceScreen>
