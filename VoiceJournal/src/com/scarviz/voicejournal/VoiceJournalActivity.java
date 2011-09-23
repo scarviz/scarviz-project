@@ -2,6 +2,7 @@ package com.scarviz.voicejournal;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -60,7 +61,9 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     private static final String BLANK = " ";
     // 改行コード
     private static final String NEWLINE = "\n";
-
+    // 縮小用
+    private static final int FITSIZE = 128;
+    
     // LocationManager用
     private LocationManager mManager;
 
@@ -130,7 +133,11 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         	uri = Uri.parse(bgUriTxt);
         }
 		// 背景画像を設定する
-		SetBackGroundImage(uri);
+		try {
+			SetBackGroundImage(uri, FITSIZE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
         // 設定領域から前回設定した区切り線IDを取得する
         String lineId = mPrefs.getString("LINE_ID", null);
@@ -679,8 +686,10 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 	 * 背景画像を設定する。
 	 * 
 	 * @param uri
+	 * @param fitsize
+	 * @throws IOException 
 	 */
-	private void SetBackGroundImage(Uri uri){
+	private void SetBackGroundImage(Uri uri, int fitsize) throws IOException{
 		Bitmap bmp = null;
 
 		// 全体を囲っているLinearLayout
@@ -694,8 +703,26 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         }
         
 		try {
+			// 画像読み込み無しモード
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			
+			InputStream is = this.getContentResolver().openInputStream(uri);
+			// URIからBitmapを画像読み込み無しで取得する
+			bmp = BitmapFactory.decodeStream(is, null, opts);
+			is.close();
+			is = null;
+			
+			// 画像サイズから縮小サイズを算出する
+			int width_size = 1 + (opts.outWidth / fitsize);
+			int height_size = 1 + (opts.outHeight / fitsize);
+			
+			is = this.getContentResolver().openInputStream(uri);
+			// 縮小サイズのより大きい方を選択する
+			opts.inSampleSize = Math.max(width_size, height_size);
+			opts.inJustDecodeBounds = false;
 			// URIからBitmapを取得する
-			bmp = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri));
+			bmp = BitmapFactory.decodeStream(is, null, opts);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;

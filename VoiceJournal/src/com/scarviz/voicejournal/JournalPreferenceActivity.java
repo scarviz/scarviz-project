@@ -115,6 +115,7 @@ public class JournalPreferenceActivity extends PreferenceActivity {
     private void SetLineColorAsSummary(ListPreference listpref, String value){
     	// 選択色をサマリーに表示する
 		int listId = listpref.findIndexOfValue(value);
+		if(listId < 0){return;}
 		CharSequence[] entries;
 		entries = listpref.getEntries();
 		listpref.setSummary(entries[listId]);
