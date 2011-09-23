@@ -1,6 +1,8 @@
 package com.scarviz.yakomama;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -59,6 +61,9 @@ public class Main extends Activity {
 
 	// 識別用コード
     private static final int REQUEST_CODE_BG = 1;
+
+    // 縮小用
+    private static final int FITSIZE = 128;
     
 	/**
 	 * 数字ボタン情報
@@ -88,7 +93,11 @@ public class Main extends Activity {
         if(bgUriTxt != null){
         	Uri uri = Uri.parse(bgUriTxt);
 			// 背景画像を設定する
-			SetBackGroundImage(uri);
+			try {
+				SetBackGroundImage(uri, FITSIZE);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
         
         // 計算内容の表示用EditTextを取得する
@@ -729,7 +738,11 @@ public class Main extends Activity {
 	    	case REQUEST_CODE_BG:
 	    		Uri uri = data.getData();
 	    		// 背景画像を設定する
-	    		SetBackGroundImage(uri);
+				try {
+					SetBackGroundImage(uri, FITSIZE);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 	    		// 設定値領域に背景URIを設定する
 	    		SetPrefsUri(uri);
 	    		break;
@@ -812,7 +825,11 @@ public class Main extends Activity {
 								// 設定領域から背景URIを削除する
 								SetPrefsUri(null);
 								// 背景をリセットする
-								SetBackGroundImage(null);
+								try {
+									SetBackGroundImage(null, FITSIZE);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
 								break;
 							default:
 								break;
@@ -827,8 +844,10 @@ public class Main extends Activity {
 	 * 背景画像を設定する。
 	 * 
 	 * @param uri
+	 * @param fitsize
+	 * @throws IOException 
 	 */
-	private void SetBackGroundImage(Uri uri){
+	private void SetBackGroundImage(Uri uri, int fitsize) throws IOException{
 		Bitmap bmp = null;
 
 		// 全体を囲っているLinearLayout
@@ -842,8 +861,26 @@ public class Main extends Activity {
         }
         
 		try {
+			// 画像読み込み無しモード
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			
+			InputStream is = this.getContentResolver().openInputStream(uri);
+			// URIからBitmapを画像読み込み無しで取得する
+			bmp = BitmapFactory.decodeStream(is, null, opts);
+			is.close();
+			is = null;
+			
+			// 画像サイズから縮小サイズを算出する
+			int width_size = 1 + (opts.outWidth / fitsize);
+			int height_size = 1 + (opts.outHeight / fitsize);
+			
+			is = this.getContentResolver().openInputStream(uri);
+			// 縮小サイズのより大きい方を選択する
+			opts.inSampleSize = Math.max(width_size, height_size);
+			opts.inJustDecodeBounds = false;
 			// URIからBitmapを取得する
-			bmp = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri));
+			bmp = BitmapFactory.decodeStream(is, null, opts);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
