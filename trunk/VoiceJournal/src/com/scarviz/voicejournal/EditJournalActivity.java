@@ -3,6 +3,8 @@ package com.scarviz.voicejournal;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -83,10 +85,25 @@ public class EditJournalActivity extends Activity {
             String item = intent.getStringExtra("ITEM");
     		// EditTextに表示する
     		mtxtJournal.setText(item);
-    		
+
+            // 日付のフォーマット
+            SimpleDateFormat sFmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            
     		// 日付を表示
             mCreate = intent.getStringExtra("CREATE");
+            if( !((mCreate.trim()).equals("") || mCreate.equals(null)) ){
+            	mCreate = sFmt.format(Date.parse(mCreate));
+            }
+            else{
+            	mCreate = "なし";
+            }
             mUpdate = intent.getStringExtra("UPDATE");
+            if( !((mUpdate.trim()).equals("") || mUpdate.equals(null)) ){
+            	mUpdate = sFmt.format(Date.parse(mUpdate));
+            }
+            else{
+            	mUpdate = "なし";
+            }
         }
         
         // カスタムタイトルバーの設定
