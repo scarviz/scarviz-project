@@ -781,8 +781,8 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 				Intent intent = new Intent(this, EditJournalActivity.class);
 				intent.putExtra("TITLE_NO", 0);  
 				intent.putExtra("ITEM","");
-				intent.putExtra("CREATE","なし");
-				intent.putExtra("UPDATE","なし");
+				intent.putExtra("CREATE","");
+				intent.putExtra("UPDATE","");
 				startActivityForResult(intent, REQUEST_CODE_LIST_ITEM);
 		        break;
 		    // 設定

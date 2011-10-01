@@ -168,7 +168,7 @@ public class Utils {
 			// 書き込み用SQLiteDatabaseを生成
 			db = helper.getWritableDatabase();
 			
-			// インサート処理の実行
+			// デリート処理の実行
 			db.delete(DatabaseHelper.TABLE_VOICE_JOURNAL,
 					BaseColumns._ID + " = ?",
 					new String[]{Integer.toString(id)});
