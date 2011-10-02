@@ -102,7 +102,7 @@
 		android:layout_height="fill_parent"
 		android:background="#60000000">
 		<TextView
-			android:text="記録はありません"
+			android:text="@string/no_record"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:textSize="40px"

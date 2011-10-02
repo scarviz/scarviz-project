@@ -10,6 +10,7 @@
     <string name="mes_pref_bg_set">The background image was set up. </string>
     <string name="mes_pref_bg_reset">The background was returned to the initial state. </string>
     <string name="mes_prompt">It records.</string>
+    <string name="no_record">There is no record.</string>
     
     <string name="Text_Share">Text share</string>
     <string name="Deletion">Deletion</string>

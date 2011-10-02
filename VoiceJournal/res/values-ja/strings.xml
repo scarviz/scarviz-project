@@ -10,6 +10,7 @@
     <string name="mes_pref_bg_set">背景画像を設定しました</string>
     <string name="mes_pref_bg_reset">背景を初期状態に戻しました</string>
     <string name="mes_prompt">記録します</string>
+    <string name="no_record">記録はありません</string>
     
     <string name="Text_Share">テキスト共有</string>
     <string name="Deletion">削除</string>
