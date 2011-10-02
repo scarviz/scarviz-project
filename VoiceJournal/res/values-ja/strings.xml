@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ぷちジャーナル</string>
+    <string name="mes_edit_save">編集内容を保存しました</string>
+    <string name="mes_edit_del">削除しました</string>
+    <string name="hint_search">検索する単語を入力してください</string>
+    <string name="mes_share">テキストを共有します</string>
+    <string name="btn_back">取消し</string>
+    <string name="pref_title">設定</string>
+    <string name="mes_pref_bg_set">背景画像を設定しました</string>
+    <string name="mes_pref_bg_reset">背景を初期状態に戻しました</string>
+    <string name="mes_prompt">記録します</string>
+    
+    <string name="Text_Share">テキスト共有</string>
+    <string name="Deletion">削除</string>
+    
+    <string name="Latitude">緯度</string>
+    <string name="Longitude">経度</string>
+    
+    <string name="Speech_Recognition">音声認識</string>
+    <string name="Location">現在地取得</string>
+    <string name="Search">検索</string>
+    
+    <string name="Nothing">なし</string>
+    <string name="CreationDate">登録日</string>
+    <string name="UpdatedDate">更新日</string>
+    
+    <!-- ダイアログ用 -->
+    <string name="dlg_btn_ok">OK</string>
+    <string name="dlg_btn_cancel">Cancel</string>
+    
+    <string name="dlg_title">お願い</string>
+    <string name="dlg_mes_001">GPSを有効にしてください</string>
+    
+    <string name="dlg_selected_title">選択してください</string>
+    
+    <string name="dlg_del_title">削除確認</string>
+    <string name="dlg_del_mes_001">選択項目を削除しますか？</string>
+    
+    <!-- メニュー -->
+    <string name="menu_add_title">新規追加</string>
+    <string name="menu_pref_title">設定</string>
+    <string name="menu_cancel_title">編集取消し</string>
+    
+    <!-- 設定画面 -->
+    <string name="pref_background_title">背景変更</string>
+    <string name="pref_background_select_title">背景画像選択</string>
+    <string name="pref_background_select">pref_background_select</string>
+    <string name="pref_background_select_summary">背景画像を選択する</string>
+    <string name="pref_background_reset_title">背景リセット</string>
+    <string name="pref_background_reset">pref_background_reset</string>
+    <string name="pref_background_reset_summary">背景を初期状態に戻す</string>
+    
+    <string name="pref_line_title">区切り線変更</string>
+    <string name="pref_line_select_title">区切り線選択</string>
+    <string name="pref_line_select">pref_line_select</string>
+    
+    <!-- エラーメッセージ -->
+    <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
+    <string name="err_mes_002">位置情報取得に失敗しました</string>
+    <string name="err_mes_003">編集の保存に失敗しました</string>
+    <string name="err_mes_004">共有できませんでした</string>
+    
+    <!-- ラインID -->
+    <string name="line_default">Default</string>
+    <string name="line_black">Black</string>
+    <string name="line_blue">Blue</string>
+    <string name="line_brown">Brown</string>
+    <string name="line_gray">Gray</string>
+    <string name="line_green">Green</string>
+    <string name="line_lightblue">LightBlue</string>
+    <string name="line_orange">Orange</string>
+    <string name="line_pink">Pink</string>
+    <string name="line_purple">Purple</string>
+    <string name="line_red">Red</string>
+    <string name="line_white">White</string>
+    <string name="line_yellow">Yellow</string>
+    
+    <!-- ラインValue -->
+    <string name="value_default">default</string>
+    <string name="value_black">black</string>
+    <string name="value_blue">blue</string>
+    <string name="value_brown">brown</string>
+    <string name="value_gray">gray</string>
+    <string name="value_green">green</string>
+    <string name="value_lightblue">lightblue</string>
+    <string name="value_orange">orange</string>
+    <string name="value_pink">pink</string>
+    <string name="value_purple">purple</string>
+    <string name="value_red">red</string>
+    <string name="value_white">white</string>
+    <string name="value_yellow">yellow</string>
+</resources>

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
@@ -88,21 +89,29 @@ public class EditJournalActivity extends Activity {
 
             // 日付のフォーマット
             SimpleDateFormat sFmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            // 各地域対応用の日付フォーマット
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(this);
             
     		// 日付を表示
             mCreate = intent.getStringExtra("CREATE");
             if( !((mCreate.trim()).equals("") || mCreate.equals(null)) ){
-            	mCreate = sFmt.format(Date.parse(mCreate));
+            	// 日付と時間を分ける
+            	String[] createArray = sFmt.format(Date.parse(mCreate)).split(" ");
+            	// 日付を各地域対応させて、表示用に時間を合わせる
+            	mCreate = dateFormat.format(Date.parse(createArray[0])) + " " + createArray[1];
             }
             else{
-            	mCreate = "なし";
+            	mCreate = getString(R.string.Nothing);
             }
             mUpdate = intent.getStringExtra("UPDATE");
             if( !((mUpdate.trim()).equals("") || mUpdate.equals(null)) ){
-            	mUpdate = sFmt.format(Date.parse(mUpdate));
+            	// 日付と時間を分ける
+            	String[] updateArray = sFmt.format(Date.parse(mUpdate)).split(" ");
+            	// 日付を各地域対応させて、表示用に時間を合わせる
+            	mUpdate = dateFormat.format(Date.parse(updateArray[0])) + " " + updateArray[1];
             }
             else{
-            	mUpdate = "なし";
+            	mUpdate = getString(R.string.Nothing);
             }
         }
         
@@ -110,7 +119,8 @@ public class EditJournalActivity extends Activity {
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitle);
         // 日付表示
         TextView txtDate = (TextView)findViewById(R.id.txtDate);
-        txtDate.setText("登録日：" + mCreate + "\n" + "更新日：" + mUpdate);
+        txtDate.setText(getString(R.string.CreationDate) + "：" + mCreate
+        		+ "\n" + getString(R.string.UpdatedDate) + "：" + mUpdate);
 	}
 
     /**

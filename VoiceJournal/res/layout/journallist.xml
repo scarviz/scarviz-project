@@ -19,7 +19,7 @@
 			android:layout_weight="1"
 			android:gravity="center">
 			<TextView
-				android:text="録音開始"
+				android:text="@string/Speech_Recognition"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 			</TextView>
@@ -39,7 +39,7 @@
 			android:layout_weight="1"
 			android:gravity="center">
 			<TextView
-				android:text="現在地取得"
+				android:text="@string/Location"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 			</TextView>
@@ -59,7 +59,7 @@
 			android:layout_weight="1"
 			android:gravity="center">
 			<TextView
-				android:text="検索"
+				android:text="@string/Search"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 			</TextView>

@@ -73,77 +73,94 @@ public final class R {
         public static final int mainmenu=0x7f090001;
     }
     public static final class string {
+        public static final int CreationDate=0x7f070012;
+        public static final int Deletion=0x7f07000b;
+        public static final int Latitude=0x7f07000c;
+        public static final int Location=0x7f07000f;
+        public static final int Longitude=0x7f07000d;
+        public static final int Nothing=0x7f070011;
+        public static final int Search=0x7f070010;
+        public static final int Speech_Recognition=0x7f07000e;
+        public static final int Text_Share=0x7f07000a;
+        public static final int UpdatedDate=0x7f070013;
         public static final int app_name=0x7f070000;
         public static final int btn_back=0x7f070005;
-        public static final int dlg_btn_cancel=0x7f07000a;
-        /**  ダイアログ用 
+        public static final int dlg_btn_cancel=0x7f070015;
+        /**  Dialog 
+ ダイアログ用 
          */
-        public static final int dlg_btn_ok=0x7f070009;
-        public static final int dlg_del_mes_001=0x7f07000f;
-        public static final int dlg_del_title=0x7f07000e;
-        public static final int dlg_mes_001=0x7f07000c;
-        public static final int dlg_selected_title=0x7f07000d;
-        public static final int dlg_title=0x7f07000b;
-        /**  エラーメッセージ 
+        public static final int dlg_btn_ok=0x7f070014;
+        public static final int dlg_del_mes_001=0x7f07001a;
+        public static final int dlg_del_title=0x7f070019;
+        public static final int dlg_mes_001=0x7f070017;
+        public static final int dlg_selected_title=0x7f070018;
+        public static final int dlg_title=0x7f070016;
+        /**  ErrMes 
+ エラーメッセージ 
          */
-        public static final int err_mes_001=0x7f07001d;
-        public static final int err_mes_002=0x7f07001e;
-        public static final int err_mes_003=0x7f07001f;
-        public static final int err_mes_004=0x7f070020;
+        public static final int err_mes_001=0x7f070028;
+        public static final int err_mes_002=0x7f070029;
+        public static final int err_mes_003=0x7f07002a;
+        public static final int err_mes_004=0x7f07002b;
         public static final int hint_search=0x7f070003;
-        public static final int line_black=0x7f070022;
-        public static final int line_blue=0x7f070023;
-        public static final int line_brown=0x7f070024;
-        /**  ラインID 
+        public static final int line_black=0x7f07002d;
+        public static final int line_blue=0x7f07002e;
+        public static final int line_brown=0x7f07002f;
+        /**  LineID 
+ ラインID 
          */
-        public static final int line_default=0x7f070021;
-        public static final int line_gray=0x7f070025;
-        public static final int line_green=0x7f070026;
-        public static final int line_lightblue=0x7f070027;
-        public static final int line_orange=0x7f070028;
-        public static final int line_pink=0x7f070029;
-        public static final int line_purple=0x7f07002a;
-        public static final int line_red=0x7f07002b;
-        public static final int line_white=0x7f07002c;
-        public static final int line_yellow=0x7f07002d;
-        /**  メニュー 
+        public static final int line_default=0x7f07002c;
+        public static final int line_gray=0x7f070030;
+        public static final int line_green=0x7f070031;
+        public static final int line_lightblue=0x7f070032;
+        public static final int line_orange=0x7f070033;
+        public static final int line_pink=0x7f070034;
+        public static final int line_purple=0x7f070035;
+        public static final int line_red=0x7f070036;
+        public static final int line_white=0x7f070037;
+        public static final int line_yellow=0x7f070038;
+        /**  Menu 
+ メニュー 
          */
-        public static final int menu_add_title=0x7f070010;
-        public static final int menu_cancel_title=0x7f070012;
-        public static final int menu_pref_title=0x7f070011;
+        public static final int menu_add_title=0x7f07001b;
+        public static final int menu_cancel_title=0x7f07001d;
+        public static final int menu_pref_title=0x7f07001c;
         public static final int mes_edit_del=0x7f070002;
         public static final int mes_edit_save=0x7f070001;
         public static final int mes_pref_bg_reset=0x7f070008;
         public static final int mes_pref_bg_set=0x7f070007;
+        public static final int mes_prompt=0x7f070009;
         public static final int mes_share=0x7f070004;
-        public static final int pref_background_reset=0x7f070018;
-        public static final int pref_background_reset_summary=0x7f070019;
-        public static final int pref_background_reset_title=0x7f070017;
-        public static final int pref_background_select=0x7f070015;
-        public static final int pref_background_select_summary=0x7f070016;
-        public static final int pref_background_select_title=0x7f070014;
-        /**  設定画面 
+        public static final int pref_background_reset=0x7f070023;
+        public static final int pref_background_reset_summary=0x7f070024;
+        public static final int pref_background_reset_title=0x7f070022;
+        public static final int pref_background_select=0x7f070020;
+        public static final int pref_background_select_summary=0x7f070021;
+        public static final int pref_background_select_title=0x7f07001f;
+        /**  Settings 
+ 設定画面 
          */
-        public static final int pref_background_title=0x7f070013;
-        public static final int pref_line_select=0x7f07001c;
-        public static final int pref_line_select_title=0x7f07001b;
-        public static final int pref_line_title=0x7f07001a;
+        public static final int pref_background_title=0x7f07001e;
+        public static final int pref_line_select=0x7f070027;
+        public static final int pref_line_select_title=0x7f070026;
+        public static final int pref_line_title=0x7f070025;
         public static final int pref_title=0x7f070006;
-        public static final int value_black=0x7f07002f;
-        public static final int value_blue=0x7f070030;
-        public static final int value_brown=0x7f070031;
-        /**  ラインValue 
+        public static final int value_black=0x7f07003a;
+        public static final int value_blue=0x7f07003b;
+        public static final int value_brown=0x7f07003c;
+        /**  LineValue 
+ ラインValue 
          */
-        public static final int value_default=0x7f07002e;
-        public static final int value_gray=0x7f070032;
-        public static final int value_green=0x7f070033;
-        public static final int value_lightblue=0x7f070034;
-        public static final int value_orange=0x7f070035;
-        public static final int value_pink=0x7f070036;
-        public static final int value_purple=0x7f070037;
-        public static final int value_red=0x7f070038;
-        public static final int value_white=0x7f070039;
-        public static final int value_yellow=0x7f07003a;
+        public static final int value_default=0x7f070039;
+        public static final int value_gray=0x7f07003d;
+        public static final int value_green=0x7f07003e;
+        public static final int value_lightblue=0x7f07003f;
+        public static final int value_orange=0x7f070040;
+        public static final int value_pink=0x7f070041;
+        public static final int value_purple=0x7f070042;
+        public static final int value_red=0x7f070043;
+        public static final int value_white=0x7f070044;
+        public static final int value_yellow=0x7f070045;
     }
     public static final class style {
         public static final int CustomTheme_Black=0x7f080001;

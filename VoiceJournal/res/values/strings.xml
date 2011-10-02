@@ -1,52 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ぷちジャーナル</string>
-    <string name="mes_edit_save">編集内容を保存しました</string>
-    <string name="mes_edit_del">削除しました</string>
-    <string name="hint_search">検索する単語を入力してください</string>
-    <string name="mes_share">テキストを共有します</string>
-    <string name="btn_back">取消し</string>
-    <string name="pref_title">設定</string>
-    <string name="mes_pref_bg_set">背景画像を設定しました</string>
-    <string name="mes_pref_bg_reset">背景を初期状態に戻しました</string>
+    <string name="app_name">VoiceJournal</string>
+    <string name="mes_edit_save">Saved</string>
+    <string name="mes_edit_del">Deleted</string>
+    <string name="hint_search">Please input the word to search. </string>
+    <string name="mes_share">Text is shared. </string>
+    <string name="btn_back">Cancel</string>
+    <string name="pref_title">Settings</string>
+    <string name="mes_pref_bg_set">The background image was set up. </string>
+    <string name="mes_pref_bg_reset">The background was returned to the initial state. </string>
+    <string name="mes_prompt">It records.</string>
     
-    <!-- ダイアログ用 -->
+    <string name="Text_Share">Text share</string>
+    <string name="Deletion">Deletion</string>
+    
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+    
+    <string name="Speech_Recognition">Speech</string>
+    <string name="Location">Location</string>
+    <string name="Search">Search</string>
+
+    <string name="Nothing">Nothing</string>
+    <string name="CreationDate">CreationDate</string>
+    <string name="UpdatedDate">UpdatedDate</string>
+    
+    <!-- Dialog -->
     <string name="dlg_btn_ok">OK</string>
     <string name="dlg_btn_cancel">Cancel</string>
     
-    <string name="dlg_title">お願い</string>
-    <string name="dlg_mes_001">GPSを有効にしてください</string>
+    <string name="dlg_title">Please</string>
+    <string name="dlg_mes_001">Please validate GPS.</string>
     
-    <string name="dlg_selected_title">選択してください</string>
+    <string name="dlg_selected_title">Please choose.</string>
     
-    <string name="dlg_del_title">削除確認</string>
-    <string name="dlg_del_mes_001">選択項目を削除しますか？</string>
+    <string name="dlg_del_title">Deletion</string>
+    <string name="dlg_del_mes_001">Is a selection item deleted?</string>
     
-    <!-- メニュー -->
-    <string name="menu_add_title">新規追加</string>
-    <string name="menu_pref_title">設定</string>
-    <string name="menu_cancel_title">編集取消し</string>
+    <!-- Menu -->
+    <string name="menu_add_title">Add</string>
+    <string name="menu_pref_title">Settings</string>
+    <string name="menu_cancel_title">Cancel</string>
     
-    <!-- 設定画面 -->
-    <string name="pref_background_title">背景変更</string>
-    <string name="pref_background_select_title">背景画像選択</string>
+    <!-- Settings -->
+    <string name="pref_background_title">Background change</string>
+    <string name="pref_background_select_title">Background image selection</string>
     <string name="pref_background_select">pref_background_select</string>
-    <string name="pref_background_select_summary">背景画像を選択する</string>
-    <string name="pref_background_reset_title">背景リセット</string>
+    <string name="pref_background_select_summary">A background image is chosen.</string>
+    <string name="pref_background_reset_title">Background reset</string>
     <string name="pref_background_reset">pref_background_reset</string>
-    <string name="pref_background_reset_summary">背景を初期状態に戻す</string>
+    <string name="pref_background_reset_summary">A background is returned to an initial state.</string>
     
-    <string name="pref_line_title">区切り線変更</string>
-    <string name="pref_line_select_title">区切り線選択</string>
+    <string name="pref_line_title">Pause line change</string>
+    <string name="pref_line_select_title">Pause line selection</string>
     <string name="pref_line_select">pref_line_select</string>
     
-    <!-- エラーメッセージ -->
-    <string name="err_mes_001">音声認識対応ツールがインストールされていません</string>
-    <string name="err_mes_002">位置情報取得に失敗しました</string>
-    <string name="err_mes_003">編集の保存に失敗しました</string>
-    <string name="err_mes_004">共有できませんでした</string>
+    <!-- ErrMes -->
+    <string name="err_mes_001">The speech recognition compatible tool is not installed.</string>
+    <string name="err_mes_002">Position information acquisition went wrong.</string>
+    <string name="err_mes_003">Preservation of edit went wrong.</string>
+    <string name="err_mes_004">It was not able to share.</string>
     
-    <!-- ラインID -->
+    <!-- LineID -->
     <string name="line_default">Default</string>
     <string name="line_black">Black</string>
     <string name="line_blue">Blue</string>
@@ -61,7 +76,7 @@
     <string name="line_white">White</string>
     <string name="line_yellow">Yellow</string>
     
-    <!-- ラインValue -->
+    <!-- LineValue -->
     <string name="value_default">default</string>
     <string name="value_black">black</string>
     <string name="value_blue">blue</string>

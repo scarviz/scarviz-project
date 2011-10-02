@@ -54,7 +54,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     private static final int REQUEST_CODE_VOICE_RECO = 1;
     private static final int REQUEST_CODE_LIST_ITEM = 2;
     // プロンプト表示用
-    private static final String PROMPT_MES = "記録します";
+    private String PROMPT_MES = "";
     // エラーコード
     private static final int ERR_CD_POSITION = -1;
     // 空白
@@ -175,6 +175,9 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
         
         // 長押しイベントリスナーを設定する
         getListView().setOnItemLongClickListener(this);
+        
+        // 音声認識ツールのプロンプト
+        PROMPT_MES = getString(R.string.mes_prompt);
 	}
 
 	/**
@@ -247,7 +250,7 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// ダイアログ
 		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		dlg.setTitle(R.string.dlg_selected_title);
-		dlg.setItems(new String[] {"テキスト共有","削除"}, 
+		dlg.setItems(new String[] {getString(R.string.Text_Share),getString(R.string.Deletion)}, 
 				new DialogInterface.OnClickListener() {
 					
 					@Override
@@ -524,7 +527,8 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
     	double longitude = location.getLongitude();
     	
     	// 表示用
-    	String locationInfo = "緯度＝"+latitude+",経度＝"+longitude;
+    	String locationInfo = getString(R.string.Latitude) + "＝" + latitude
+    			+ "," + getString(R.string.Longitude) + "＝" + longitude;
     	try{
     		// 座標を住所に変換する
     		locationInfo = ConvertAddress(latitude,longitude,this);
