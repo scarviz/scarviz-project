@@ -3,6 +3,8 @@ package com.scarviz.voicejournal;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -250,19 +252,23 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		// ダイアログ
 		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		dlg.setTitle(R.string.dlg_selected_title);
-		dlg.setItems(new String[] {getString(R.string.Text_Share),getString(R.string.Deletion)}, 
+		dlg.setItems(new String[] {getString(R.string.SendTweet), getString(R.string.Text_Share), getString(R.string.Deletion)}, 
 				new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch(which){
-							// "テキスト共有"を選択時
+							// "ツイート"を選択時
 							case 0:
+								SelectedTweet(position);
+								break;
+							// "テキスト共有"を選択時
+							case 1:
 								// テキスト共有選択時処理
 								SelectedShare(position);
 								break;
 							// "削除"を選択時
-							case 1:
+							case 2:
 								// 削除選択時処理
 								SelectedDelete(context, position);
 								break;
@@ -275,6 +281,35 @@ public class VoiceJournalActivity extends ListActivity implements LocationListen
 		dlg.show();
 		
 		return true;
+	}
+	
+	/**
+	 * ツイート選択時処理
+	 * 
+	 * @param position
+	 */
+	private void SelectedTweet(final int position){
+		// リスト取得
+		ListView list = getListView();
+		// 選択項目を取得
+		String item = "https://twitter.com/intent/tweet?text=";
+		try {
+			item += URLEncoder.encode((String)list.getItemAtPosition(position), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item));
+	    
+		try{
+			// 共有一覧から選択し、遷移する
+		    startActivity(Intent.createChooser(
+		            intent, getString(R.string.mes_tweet)));
+		}catch (android.content.ActivityNotFoundException ex) {
+			// 遷移に失敗した場合、エラーメッセージを表示する
+			Toast.makeText(VoiceJournalActivity.this,
+	           		 R.string.err_mes_005, Toast.LENGTH_SHORT).show();
+		} 
 	}
 	
 	/**

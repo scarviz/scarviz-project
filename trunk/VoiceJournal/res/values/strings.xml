@@ -3,15 +3,17 @@
     <string name="app_name">VoiceJournal</string>
     <string name="mes_edit_save">Saved</string>
     <string name="mes_edit_del">Deleted</string>
-    <string name="hint_search">Please input the word to search. </string>
-    <string name="mes_share">Text is shared. </string>
+    <string name="hint_search">Please input the word to search.</string>
+    <string name="mes_share">Text is shared.</string>
+    <string name="mes_tweet">Text is tweetted.</string>
     <string name="btn_back">Cancel</string>
     <string name="pref_title">Settings</string>
-    <string name="mes_pref_bg_set">The background image was set up. </string>
-    <string name="mes_pref_bg_reset">The background was returned to the initial state. </string>
+    <string name="mes_pref_bg_set">The background image was set up.</string>
+    <string name="mes_pref_bg_reset">The background was returned to the initial state.</string>
     <string name="mes_prompt">It records.</string>
     <string name="no_record">There is no record.</string>
     
+    <string name="SendTweet">Tweet</string>
     <string name="Text_Share">Text share</string>
     <string name="Deletion">Deletion</string>
     
@@ -61,6 +63,7 @@
     <string name="err_mes_002">Position information acquisition went wrong.</string>
     <string name="err_mes_003">Preservation of edit went wrong.</string>
     <string name="err_mes_004">It was not able to share.</string>
+    <string name="err_mes_005">TwitterClient is not found.</string>
     
     <!-- LineID -->
     <string name="line_default">Default</string>
