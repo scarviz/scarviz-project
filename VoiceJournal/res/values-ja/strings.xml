@@ -5,6 +5,7 @@
     <string name="mes_edit_del">削除しました</string>
     <string name="hint_search">検索する単語を入力してください</string>
     <string name="mes_share">テキストを共有します</string>
+    <string name="mes_tweet">テキストをツイートします</string>
     <string name="btn_back">取消し</string>
     <string name="pref_title">設定</string>
     <string name="mes_pref_bg_set">背景画像を設定しました</string>
@@ -12,6 +13,7 @@
     <string name="mes_prompt">記録します</string>
     <string name="no_record">記録はありません</string>
     
+    <string name="SendTweet">ツイート</string>
     <string name="Text_Share">テキスト共有</string>
     <string name="Deletion">削除</string>
     
@@ -61,6 +63,7 @@
     <string name="err_mes_002">位置情報取得に失敗しました</string>
     <string name="err_mes_003">編集の保存に失敗しました</string>
     <string name="err_mes_004">共有できませんでした</string>
+    <string name="err_mes_005">twitterクライアントが見つかりません</string>
     
     <!-- ラインID -->
     <string name="line_default">Default</string>
